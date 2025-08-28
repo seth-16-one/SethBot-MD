@@ -101,6 +101,7 @@ const { miscCommand, handleHeart } = require('./commands/misc');
 const { animeCommand } = require('./commands/anime');
 const { piesCommand, piesAlias } = require('./commands/pies');
 const stickercropCommand = require('./commands/stickercrop');
+const updateCommand = require('./commands/update');
 // Global settings
 global.packname = settings.packname;
 global.author = settings.author;
@@ -912,7 +913,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
                     await animeCommand(sock, chatId, message, [sub]);
                 }
                 break;
-                 case userMessage === '.crop':
+            case userMessage === '.crop':
                 await stickercropCommand(sock, chatId, message);
                 commandExecuted = true;
                 break;
@@ -942,6 +943,14 @@ async function handleMessages(sock, messageUpdate, printLog) {
                 break;
             case userMessage === '.hijab':
                 await piesAlias(sock, chatId, message, 'hijab');
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.update'):
+                {
+                    const parts = rawText.trim().split(/\s+/);
+                    const zipArg = parts[1] && parts[1].startsWith('http') ? parts[1] : '';
+                    await updateCommand(sock, chatId, message, senderIsSudo, zipArg);
+                }
                 commandExecuted = true;
                 break;
 
