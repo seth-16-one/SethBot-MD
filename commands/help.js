@@ -76,11 +76,22 @@ async function helpCommand(sock, chatId, message) {
 ║ ➤ .blur <image>
 ║ ➤ .simage <reply to sticker>
 ║ ➤ .sticker <reply to image>
+║ ➤ .crop <reply to image>
 ║ ➤ .tgsticker <Link>
 ║ ➤ .meme
 ║ ➤ .take <packname> 
 ║ ➤ .emojimix <emj1>+<emj2>
 ╚═══════════════════╝  
+
+╔═══════════════════╗
+🖼️ *Pies Commands*:
+║ ➤ .pies <country>
+║ ➤ .china 
+║ ➤ .indonesia 
+║ ➤ .japan 
+║ ➤ .korea 
+║ ➤ .hijab
+╚═══════════════════╝
 
 ╔═══════════════════╗
 🎮 *Game Commands*:

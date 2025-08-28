@@ -99,7 +99,8 @@ const videoCommand = require('./commands/video');
 const sudoCommand = require('./commands/sudo');
 const { miscCommand, handleHeart } = require('./commands/misc');
 const { animeCommand } = require('./commands/anime');
-
+const { piesCommand, piesAlias } = require('./commands/pies');
+const stickercropCommand = require('./commands/stickercrop');
 // Global settings
 global.packname = settings.packname;
 global.author = settings.author;
@@ -910,6 +911,38 @@ async function handleMessages(sock, messageUpdate, printLog) {
                     if (sub === 'quote' || sub === 'animuquote') sub = 'quote';
                     await animeCommand(sock, chatId, message, [sub]);
                 }
+                break;
+                 case userMessage === '.crop':
+                await stickercropCommand(sock, chatId, message);
+                commandExecuted = true;
+                break;
+            case userMessage.startsWith('.pies'):
+                {
+                    const parts = rawText.trim().split(/\s+/);
+                    const args = parts.slice(1);
+                    await piesCommand(sock, chatId, message, args);
+                    commandExecuted = true;
+                }
+                break;
+            case userMessage === '.china':
+                await piesAlias(sock, chatId, message, 'china');
+                commandExecuted = true;
+                break;
+            case userMessage === '.indonesia':
+                await piesAlias(sock, chatId, message, 'indonesia');
+                commandExecuted = true;
+                break;
+            case userMessage === '.japan':
+                await piesAlias(sock, chatId, message, 'japan');
+                commandExecuted = true;
+                break;
+            case userMessage === '.korea':
+                await piesAlias(sock, chatId, message, 'korea');
+                commandExecuted = true;
+                break;
+            case userMessage === '.hijab':
+                await piesAlias(sock, chatId, message, 'hijab');
+                commandExecuted = true;
                 break;
 
             default:
