@@ -182,11 +182,13 @@ async function restartProcess(sock, chatId, message) {
         await run('pm2 restart all');
         return;
     } catch {}
-    // Panels usually auto-restart when the process exits.
-    // Exit after a short delay to allow the above message to flush.
+    // Panels usually auto-restart when the process exits, but many have a 60s throttle.
+    // If uptime is under 70s, delay exit to avoid "Aborting automatic restart".
+    const uptimeSec = Math.floor(process.uptime());
+    const delayMs = uptimeSec < 70 ? (70 - uptimeSec) * 1000 + 500 : 500;
     setTimeout(() => {
         process.exit(0);
-    }, 500);
+    }, delayMs);
 }
 
 async function updateCommand(sock, chatId, message, senderIsSudo, zipOverride) {
@@ -195,6 +197,15 @@ async function updateCommand(sock, chatId, message, senderIsSudo, zipOverride) {
         return;
     }
     try {
+        // Prevent overlapping updates via a simple lock
+        const lockDir = path.join(process.cwd(), 'tmp');
+        if (!fs.existsSync(lockDir)) fs.mkdirSync(lockDir, { recursive: true });
+        const lockPath = path.join(lockDir, 'update.lock');
+        if (fs.existsSync(lockPath)) {
+            await sock.sendMessage(chatId, { text: '⚠️ Update already in progress. Please wait…' }, { quoted: message });
+            return;
+        }
+        try { fs.writeFileSync(lockPath, String(Date.now())); } catch {}
         // Minimal UX
         await sock.sendMessage(chatId, { text: '🔄 Updating the bot, please wait…' }, { quoted: message });
         if (await hasGitRepo()) {
@@ -219,6 +230,9 @@ async function updateCommand(sock, chatId, message, senderIsSudo, zipOverride) {
     } catch (err) {
         console.error('Update failed:', err);
         await sock.sendMessage(chatId, { text: `❌ Update failed:\n${String(err.message || err)}` }, { quoted: message });
+    } finally {
+        // Best-effort: remove lock (if process exits immediately, panel restart will clear tmp later)
+        try { fs.unlinkSync(path.join(process.cwd(), 'tmp', 'update.lock')); } catch {}
     }
 }
 
