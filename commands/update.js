@@ -130,13 +130,10 @@ async function updateViaZip(sock, chatId, message, zipOverride) {
     if (!zipUrl) {
         throw new Error('No ZIP URL configured. Set settings.updateZipUrl or UPDATE_ZIP_URL env.');
     }
-    await sock.sendMessage(chatId, { text: '⬇️ Downloading latest ZIP…' }, { quoted: message });
     const tmpDir = path.join(process.cwd(), 'tmp');
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
     const zipPath = path.join(tmpDir, 'update.zip');
     await downloadFile(zipUrl, zipPath);
-
-    await sock.sendMessage(chatId, { text: '📦 Extracting update…' }, { quoted: message });
     const extractTo = path.join(tmpDir, 'update_extract');
     if (fs.existsSync(extractTo)) fs.rmSync(extractTo, { recursive: true, force: true });
     await extractZip(zipPath, extractTo);
@@ -150,9 +147,11 @@ async function updateViaZip(sock, chatId, message, zipOverride) {
     const copied = [];
     // Preserve ownerNumber from existing settings.js if present
     let preservedOwner = null;
+    let preservedBotOwner = null;
     try {
         const currentSettings = require('../settings');
         preservedOwner = currentSettings && currentSettings.ownerNumber ? String(currentSettings.ownerNumber) : null;
+        preservedBotOwner = currentSettings && currentSettings.botOwner ? String(currentSettings.botOwner) : null;
     } catch {}
     copyRecursive(srcRoot, process.cwd(), ignore, '', copied);
     if (preservedOwner) {
@@ -161,6 +160,9 @@ async function updateViaZip(sock, chatId, message, zipOverride) {
             if (fs.existsSync(settingsPath)) {
                 let text = fs.readFileSync(settingsPath, 'utf8');
                 text = text.replace(/ownerNumber:\s*'[^']*'/, `ownerNumber: '${preservedOwner}'`);
+                if (preservedBotOwner) {
+                    text = text.replace(/botOwner:\s*'[^']*'/, `botOwner: '${preservedBotOwner}'`);
+                }
                 fs.writeFileSync(settingsPath, text);
             }
         } catch {}
@@ -193,29 +195,26 @@ async function updateCommand(sock, chatId, message, senderIsSudo, zipOverride) {
         return;
     }
     try {
-        // Immediate acknowledgement so users see a response
-        try {
-            await sock.sendMessage(chatId, { text: '🛠️ Update request received…' }, { quoted: message });
-        } catch (e) {
-            console.log('[update] failed to send initial ack:', e?.message || e);
-        }
-        console.log('[update] start, zipOverride:', zipOverride || '(none)');
+        // Minimal UX
+        await sock.sendMessage(chatId, { text: '🔄 Updating the bot, please wait…' }, { quoted: message });
         if (await hasGitRepo()) {
-            await sock.sendMessage(chatId, { text: '🔄 Fetching from git…' }, { quoted: message });
+            // silent
             const { oldRev, newRev, alreadyUpToDate, commits, files } = await updateViaGit();
             // Short message only: version info
             const summary = alreadyUpToDate ? `✅ Already up to date: ${newRev}` : `✅ Updated to ${newRev}`;
             console.log('[update] summary generated');
-            await sock.sendMessage(chatId, { text: summary }, { quoted: message });
-            await sock.sendMessage(chatId, { text: '📦 Installing dependencies…' }, { quoted: message });
-            console.log('[update] running npm install');
+            // silent
             await run('npm install --no-audit --no-fund');
         } else {
-            console.log('[update] using ZIP mode');
             const { copiedFiles } = await updateViaZip(sock, chatId, message, zipOverride);
-            await sock.sendMessage(chatId, { text: `✅ Update complete. Files updated: ${copiedFiles.length}` }, { quoted: message });
+            // silent
         }
-        console.log('[update] restarting process');
+        try {
+            const v = require('../settings').version || '';
+            await sock.sendMessage(chatId, { text: `✅ Update done. Restarting…\nNew version: ${v}` }, { quoted: message });
+        } catch {
+            await sock.sendMessage(chatId, { text: '✅ Update done. Restarting…' }, { quoted: message });
+        }
         await restartProcess(sock, chatId, message);
     } catch (err) {
         console.error('Update failed:', err);
