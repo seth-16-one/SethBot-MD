@@ -311,6 +311,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
                         await muteCommand(sock, chatId, senderId, message, muteDuration);
                     }
                 }
+                break;
             case userMessage === '.unmute':
                 await unmuteCommand(sock, chatId, senderId);
                 break;
@@ -468,7 +469,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
             case userMessage.startsWith('.weather'):
                 const city = userMessage.slice(9).trim();
                 if (city) {
-                    await weatherCommand(sock, chatId, city);
+                    await weatherCommand(sock, chatId, message, city);
                 } else {
                     await sock.sendMessage(chatId, { text: 'Please specify a city, e.g., .weather London', ...channelInfo }, { quoted: message });
                 }

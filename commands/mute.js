@@ -14,15 +14,22 @@ async function muteCommand(sock, chatId, senderId, message, durationInMinutes) {
         return;
     }
 
-    const hasDuration = typeof durationInMinutes === 'number' && !isNaN(durationInMinutes) && durationInMinutes > 0;
-    const durationInMilliseconds = hasDuration ? durationInMinutes * 60 * 1000 : 0;
     try {
+        // Mute the group
         await sock.groupSettingUpdate(chatId, 'announcement');
-        if (hasDuration) {
+        
+        if (durationInMinutes !== undefined && durationInMinutes > 0) {
+            const durationInMilliseconds = durationInMinutes * 60 * 1000;
             await sock.sendMessage(chatId, { text: `The group has been muted for ${durationInMinutes} minutes.` }, { quoted: message });
+            
+            // Set timeout to unmute after duration
             setTimeout(async () => {
-                await sock.groupSettingUpdate(chatId, 'not_announcement');
-                await sock.sendMessage(chatId, { text: 'The group has been unmuted.' }, { quoted: message });
+                try {
+                    await sock.groupSettingUpdate(chatId, 'not_announcement');
+                    await sock.sendMessage(chatId, { text: 'The group has been unmuted.' });
+                } catch (unmuteError) {
+                    console.error('Error unmuting group:', unmuteError);
+                }
             }, durationInMilliseconds);
         } else {
             await sock.sendMessage(chatId, { text: 'The group has been muted.' }, { quoted: message });
