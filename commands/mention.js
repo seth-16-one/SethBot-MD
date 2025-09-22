@@ -8,7 +8,7 @@ function loadState() {
 		const raw = fs.readFileSync(path.join(__dirname, '..', 'data', 'mention.json'), 'utf8');
 		return JSON.parse(raw);
 	} catch {
-		return { enabled: true, assetPath: 'assets/mention_default.webp', type: 'sticker' };
+		return { enabled: false, assetPath: 'assets/mention_default.webp', type: 'sticker' };
 	}
 }
 
