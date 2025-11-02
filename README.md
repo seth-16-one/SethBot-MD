@@ -64,6 +64,13 @@ For further customization and setup guidance, click the button below:
   </a>
 </div>
 
+### Deploy on VPS
+
+<div align="center">
+  <a href="https://client.petrosky.io/aff.php?aff=394" target="_blank">
+    <img src="https://img.shields.io/badge/petrosky vps-0078E7?style=for-the-badge" alt="petrosky vps"/>
+  </a>
+</div>
 
 ### Deploy Now on Below Panel
 <div align="center">
