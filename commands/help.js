@@ -203,6 +203,9 @@ async function helpCommand(sock, chatId, message) {
 
 ╔═══════════════════╗
 🖼️ *ANIME*:
+║ ➤ .neko
+║ ➤ .waifu
+║ ➤ .loli
 ║ ➤ .nom 
 ║ ➤ .poke 
 ║ ➤ .cry 
@@ -227,35 +230,27 @@ Join our channel for updates:`;
     try {
         const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
         
+        const buttons = [
+            { buttonId: 'channel', buttonText: { displayText: '📢 Join Channel' }, type: 1 },
+            { buttonId: 'owner', buttonText: { displayText: '📞 Owner' }, type: 1 },
+            { buttonId: 'support', buttonText: { displayText: '🔗 Support' }, type: 1 }
+        ];
+
         if (fs.existsSync(imagePath)) {
             const imageBuffer = fs.readFileSync(imagePath);
             
             await sock.sendMessage(chatId, {
                 image: imageBuffer,
                 caption: helpMessage,
-                contextInfo: {
-                    forwardingScore: 1,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363161513685998@newsletter',
-                        newsletterName: 'KnightBot MD',
-                        serverMessageId: -1
-                    }
-                }
-            },{ quoted: message });
+                buttons: buttons,
+                headerType: 1
+            }, { quoted: message });
         } else {
             console.error('Bot image not found at:', imagePath);
             await sock.sendMessage(chatId, { 
                 text: helpMessage,
-                contextInfo: {
-                    forwardingScore: 1,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363161513685998@newsletter',
-                        newsletterName: 'KnightBot MD by Mr Unique Hacker',
-                        serverMessageId: -1
-                    } 
-                }
+                buttons: buttons,
+                headerType: 1
             });
         }
     } catch (error) {
