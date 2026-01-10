@@ -22,6 +22,30 @@ This is a WhatsApp bot built using the Baileys library for group management, inc
 </div>
 
 ---
+<div align="center">
+  <a href="https://www.thordata.com/products/residential-proxies?ls=YouTube&lk=Knightbot" target="_blank">
+    <img src="assets/thor.png" alt="ThorData Proxies" height="180" />
+  </a>
+</div>
+
+<br>
+
+<div align="center">
+  <b>Thordata: Get Reliable Global Proxies at an Unbeatable Value.</b><br><br>
+  One-click data collection with enterprise-grade stability and compliance.<br>
+  Join thousands of developers using ThorData for high-scale operations.<br><br>
+  🎁 <b>Exclusive Offer:</b> Sign up for a free Residential Proxy trial and 2,000 <b>FREE SERP API calls!</b>
+</div>
+
+<br>
+
+<p>
+<b>Try now：</b>
+<a href="https://www.thordata.com/products/residential-proxies?ls=YouTube&lk=Knightbot" target="_blank">
+  https://www.thordata.com/products/residential-proxies?ls=YouTube&lk=Knightbot
+</a>
+</p>
+
 
 ## 🚀 Steps to Deploy Bot
 
