@@ -39,13 +39,11 @@ This is a WhatsApp bot built using the Baileys library for group management, inc
 
 <br>
 
-<p align="left">
-<a href="https://www.thordata.com/products/residential-proxies?ls=YouTube&lk=Knightbot" target="_blank">
-  <button style="background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">
-    Try now
-  </button>
-</a>
-</p>
+<div align="left">
+  <a href="https://www.thordata.com/products/residential-proxies?ls=YouTube&lk=Knightbot" target="_blank">
+    <img src="https://img.shields.io/badge/Try now-28a745?style=for-the-badge" alt="Try now"/>
+  </a>
+</div>
 
 
 ## 🚀 Steps to Deploy Bot
