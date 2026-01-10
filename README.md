@@ -40,9 +40,10 @@ This is a WhatsApp bot built using the Baileys library for group management, inc
 <br>
 
 <p align="left">
-<b>Try now：</b>
 <a href="https://www.thordata.com/products/residential-proxies?ls=YouTube&lk=Knightbot" target="_blank">
-  https://www.thordata.com/products/residential-proxies?ls=YouTube&lk=Knightbot
+  <button style="background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;">
+    Try now
+  </button>
 </a>
 </p>
 
