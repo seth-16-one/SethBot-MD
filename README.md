@@ -22,15 +22,15 @@ This is a WhatsApp bot built using the Baileys library for group management, inc
 </div>
 
 ---
-<div align="center">
+<div>
   <a href="https://www.thordata.com/products/residential-proxies?ls=YouTube&lk=Knightbot" target="_blank">
-    <img src="assets/thor.png" alt="ThorData Proxies" height="180" />
+    <img src="assets/thor.png" alt="ThorData Proxies" width="100%" />
   </a>
 </div>
 
 <br>
 
-<div align="center">
+<div align="left">
   <b>Thordata: Get Reliable Global Proxies at an Unbeatable Value.</b><br><br>
   One-click data collection with enterprise-grade stability and compliance.<br>
   Join thousands of developers using ThorData for high-scale operations.<br><br>
@@ -39,7 +39,7 @@ This is a WhatsApp bot built using the Baileys library for group management, inc
 
 <br>
 
-<p>
+<p align="left">
 <b>Try now：</b>
 <a href="https://www.thordata.com/products/residential-proxies?ls=YouTube&lk=Knightbot" target="_blank">
   https://www.thordata.com/products/residential-proxies?ls=YouTube&lk=Knightbot
