@@ -184,7 +184,7 @@ If you find this project helpful and want to support the developer, consider buy
 
 <div align="center">
 
-<img src="utils/bmc_qr.png" alt="Buy Me a Coffee QR Code" width="200">
+<img src="assets/bmc_qr.png" alt="Buy Me a Coffee QR Code" width="200">
 
 </div>
 
