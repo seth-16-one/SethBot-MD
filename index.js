@@ -299,7 +299,7 @@ const { state, saveCreds } = await useMultiFileAuthState(sessionDir)
             
             if (statusCode === DisconnectReason.loggedOut || statusCode === 401) {
                 try {
-                    rmSync('./session', { recursive: true, force: true })
+                    rmSync(sessionDir, { recursive: true, force: true })
                     console.log(chalk.yellow('Session folder deleted. Please re-authenticate.'))
                 } catch (error) {
                     console.error('Error deleting session:', error)
