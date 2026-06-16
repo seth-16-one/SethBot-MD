@@ -70,8 +70,8 @@ setInterval(() => {
     }
 }, 30_000) // check every 30 seconds
 
-let phoneNumber = "911234567890"
-let owner = JSON.parse(fs.readFileSync('./data/owner.json'))
+let phoneNumber = process.env.OWNER_NUMBER || "254717246928"
+let owner = process.env.OWNER_NUMBER || JSON.parse(fs.readFileSync('./data/owner.json'))
 
 global.botname = "KNIGHT BOT"
 global.themeemoji = "•"
