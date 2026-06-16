@@ -93,7 +93,8 @@ const question = (text) => {
 async function startXeonBotInc() {
     try {
         let { version, isLatest } = await fetchLatestBaileysVersion()
-        const { state, saveCreds } = await useMultiFileAuthState(`./session`)
+        const sessionDir = process.env.SESSION_DIR || './session'
+const { state, saveCreds } = await useMultiFileAuthState(sessionDir)
         const msgRetryCounterCache = new NodeCache()
 
         const XeonBotInc = makeWASocket({
