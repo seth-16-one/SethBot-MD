@@ -1,5 +1,5 @@
 /**
- * Seth Bot - A WhatsApp Bot
+ * SethBot-MD - A WhatsApp Bot
  * Autotyping Command - Shows fake typing status
  */
 

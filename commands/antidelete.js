@@ -143,29 +143,72 @@ async function storeMessage(sock, message) {
         } else if (message.message?.extendedTextMessage?.text) {
             content = message.message.extendedTextMessage.text;
         } else if (message.message?.imageMessage) {
-            mediaType = 'image';
-            content = message.message.imageMessage.caption || '';
-            const buffer = await downloadContentFromMessage(message.message.imageMessage, 'image');
+    mediaType = 'image';
+    content = message.message.imageMessage.caption || '';
+
+    if (message.message.imageMessage.mediaKey) {
+        try {
+            const buffer = await downloadContentFromMessage(
+                message.message.imageMessage,
+                'image'
+            );
             mediaPath = path.join(TEMP_MEDIA_DIR, `${messageId}.jpg`);
             await writeFile(mediaPath, buffer);
+        } catch (e) {
+            console.log('Skipping image without valid media key');
+        }
+    }
         } else if (message.message?.stickerMessage) {
             mediaType = 'sticker';
-            const buffer = await downloadContentFromMessage(message.message.stickerMessage, 'sticker');
-            mediaPath = path.join(TEMP_MEDIA_DIR, `${messageId}.webp`);
-            await writeFile(mediaPath, buffer);
+
+            if (message.message.stickerMessage.mediaKey) {
+                try {
+                    const buffer = await downloadContentFromMessage(
+                        message.message.stickerMessage,
+                        'sticker'
+                    );
+                    mediaPath = path.join(TEMP_MEDIA_DIR, `${messageId}.webp`);
+                    await writeFile(mediaPath, buffer);
+                } catch (e) {
+                    console.log('Skipping sticker without valid media key');
+                }
+            }
+
         } else if (message.message?.videoMessage) {
             mediaType = 'video';
             content = message.message.videoMessage.caption || '';
-            const buffer = await downloadContentFromMessage(message.message.videoMessage, 'video');
-            mediaPath = path.join(TEMP_MEDIA_DIR, `${messageId}.mp4`);
-            await writeFile(mediaPath, buffer);
+
+            if (message.message.videoMessage.mediaKey) {
+                try {
+                    const buffer = await downloadContentFromMessage(
+                        message.message.videoMessage,
+                        'video'
+                    );
+                    mediaPath = path.join(TEMP_MEDIA_DIR, `${messageId}.mp4`);
+                    await writeFile(mediaPath, buffer);
+                } catch (e) {
+                    console.log('Skipping video without valid media key');
+                }
+            }
+
         } else if (message.message?.audioMessage) {
             mediaType = 'audio';
+
             const mime = message.message.audioMessage.mimetype || '';
             const ext = mime.includes('mpeg') ? 'mp3' : (mime.includes('ogg') ? 'ogg' : 'mp3');
-            const buffer = await downloadContentFromMessage(message.message.audioMessage, 'audio');
-            mediaPath = path.join(TEMP_MEDIA_DIR, `${messageId}.${ext}`);
-            await writeFile(mediaPath, buffer);
+
+            if (message.message.audioMessage.mediaKey) {
+                try {
+                    const buffer = await downloadContentFromMessage(
+                        message.message.audioMessage,
+                        'audio'
+                    );
+                    mediaPath = path.join(TEMP_MEDIA_DIR, `${messageId}.${ext}`);
+                    await writeFile(mediaPath, buffer);
+                } catch (e) {
+                    console.log('Skipping audio without valid media key');
+                }
+            }
         }
 
         messageStore.set(messageId, {

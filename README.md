@@ -14,7 +14,7 @@ Built upon the foundation of the KnightBot project, SethBot-MD continues to expa
 
 <div align="center"> 
   <a href="https://youtube.com/@mr_unique_hacker"> 
-    <img src="https://github.com/seth-16-one/SethBot-MD/blob/main/assets/bot_image.jpg" alt="Seth Bot" height="300"> 
+    <img src="https://github.com/seth-16-one/SethBot-MD/blob/main/assets/bot_image.jpg" alt="SethBot-MD" height="300"> 
   </a> 
 </div>
 
@@ -53,7 +53,7 @@ Built upon the foundation of the KnightBot project, SethBot-MD continues to expa
 
 ### Step 1: Fork the Repository
 
-Click the button below to fork the Seth Bot repository to your GitHub account:
+Click the button below to fork the SethBot-MD repository to your GitHub account:
 
 <div align="center">
   <a href="https://github.com/seth-16-one/SethBot-MD/fork">
