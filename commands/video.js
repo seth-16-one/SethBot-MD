@@ -114,7 +114,7 @@ await sock.sendMessage(chatId, {
     video: buffer,
     mimetype: 'video/mp4',
     fileName: `${safeTitle}.mp4`,
-    caption: `*${videoTitle || safeTitle}*\n\n> *_Downloaded by Knight Bot MD_*`
+    caption: `*${videoTitle || safeTitle}*\n\n> *_Downloaded by Seth Bot MD_*`
 }, { quoted: message });
 
 try {

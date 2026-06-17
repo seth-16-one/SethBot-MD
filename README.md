@@ -1,4 +1,4 @@
-# 🤖 Knight Bot
+# 🤖 Seth Bot
 
 This is a WhatsApp bot built using the Baileys library for group management, including features like tagging all members, muting/unmuting, and many more. It's designed to help admins efficiently manage WhatsApp groups.
 
@@ -10,15 +10,15 @@ This is a WhatsApp bot built using the Baileys library for group management, inc
 
 <div align="center"> 
   <a href="https://youtube.com/@mr_unique_hacker"> 
-    <img src="https://github.com/mruniquehacker/Knightbot-MD/blob/main/assets/bot_image.jpg" alt="Knight Bot" height="300"> 
+    <img src="https://github.com/seth-16-one/SethBot-MD/blob/main/assets/bot_image.jpg" alt="Seth Bot" height="300"> 
   </a> 
 </div>
 
 <div align="center">
-  <img src="https://img.shields.io/github/followers/mruniquehacker?style=for-the-badge&label=Followers" alt="Followers"/>
-  <img src="https://img.shields.io/github/stars/mruniquehacker/Knightbot-MD?style=for-the-badge&label=Stars" alt="Stars"/>
-  <img src="https://img.shields.io/github/forks/mruniquehacker/Knightbot-MD?style=for-the-badge&label=Forks" alt="Forks"/>
-  <img src="https://img.shields.io/github/watchers/mruniquehacker/Knightbot-MD?style=for-the-badge&label=Watchers" alt="Watchers"/>
+  <img src="https://img.shields.io/github/followers/seth-16-one?style=for-the-badge&label=Followers" alt="Followers"/>
+  <img src="https://img.shields.io/github/stars/seth-16-one/SethBot-MD?style=for-the-badge&label=Stars" alt="Stars"/>
+  <img src="https://img.shields.io/github/forks/seth-16-one/SethBot-MD?style=for-the-badge&label=Forks" alt="Forks"/>
+  <img src="https://img.shields.io/github/watchers/seth-16-one/SethBot-MD?style=for-the-badge&label=Watchers" alt="Watchers"/>
 </div>
 
 ---
@@ -49,10 +49,10 @@ This is a WhatsApp bot built using the Baileys library for group management, inc
 
 ### Step 1: Fork the Repository
 
-Click the button below to fork the Knight Bot repository to your GitHub account:
+Click the button below to fork the Seth Bot repository to your GitHub account:
 
 <div align="center">
-  <a href="https://github.com/mruniquehacker/Knightbot-MD/fork">
+  <a href="https://github.com/seth-16-one/SethBot-MD/fork">
     <img src="https://img.shields.io/badge/Fork-Repository-blue?style=for-the-badge" alt="Fork the repository"/>
   </a>
 </div>
@@ -147,8 +147,8 @@ It is lightweight and can be easily customized to add more commands as per your 
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/mruniquehacker/Knightbot-MD.git
-    cd Knightbot-MD
+    git clone https://github.com/seth-16-one/SethBot-MD.git
+    cd SethBot-MD
     ```
 
 2. **Install the dependencies:**
@@ -173,7 +173,7 @@ It is lightweight and can be easily customized to add more commands as per your 
 
 <div align="center">
 
-<a href="https://buymeacoffee.com/mruniquehacker" target="_blank">
+<a href="https://buymeacoffee.com/seth-16-one" target="_blank">
   <img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Support%20Developer-FF813F?style=for-the-badge&logo=buy-me-a-coffee&logoColor=white" alt="Buy Me a Coffee">
 </a>
 
@@ -191,24 +191,24 @@ If you find this project helpful and want to support the developer, consider buy
 
 ## 📄 License
 
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT) - see the [LICENSE](https://github.com/mruniquehacker/Knightbot-MD/blob/main/LICENSE) file for details.
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT) - see the [LICENSE](https://github.com/seth-16-one/SethBot-MD/blob/main/LICENSE) file for details.
 
 ---
 
 ## 🙌 Contributions
 
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/mruniquehacker/Knightbot-MD/issues).
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/seth-16-one/SethBot-MD/issues).
 
 ---
 
 ## 🌟 Show your support
 
-If you like this project, please give it a [⭐️ star on GitHub](https://github.com/mruniquehacker/Knightbot)!
+If you like this project, please give it a [⭐️ star on GitHub](https://github.com/seth-16-one/Knightbot)!
 
 
 ## Credits
 
-- [Professor](https://github.com/mruniquehacker)
+- [Professor](https://github.com/seth-16-one)
 - [Baileys](https://github.com/adiwajshing/Baileys)
 - [TechGod143](https://github.com/TechGod143) for pair code
 - [Dgxeon](https://github.com/Dgxeon) for pair code

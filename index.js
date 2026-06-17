@@ -1,5 +1,5 @@
 /**
- * Knight Bot - A WhatsApp Bot
+ * Seth Bot - A WhatsApp Bot
  * Copyright (c) 2024 Professor
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -73,7 +73,7 @@ setInterval(() => {
 let phoneNumber = process.env.OWNER_NUMBER || "254717246928"
 let owner = process.env.OWNER_NUMBER || JSON.parse(fs.readFileSync('./data/owner.json'))
 
-global.botname = "KNIGHT BOT"
+global.botname = "SETH BOT"
 global.themeemoji = "•"
 const pairingCode = process.argv.includes("--pairing-code")
 const useMobile = process.argv.includes("--mobile")
@@ -162,7 +162,7 @@ const { state, saveCreds } = await useMultiFileAuthState(sessionDir)
                             isForwarded: true,
                             forwardedNewsletterMessageInfo: {
                                 newsletterJid: '120363161513685998@newsletter',
-                                newsletterName: 'KnightBot MD',
+                                newsletterName: 'SethBot MD',
                                 serverMessageId: -1
                             }
                         }
@@ -271,7 +271,7 @@ const { state, saveCreds } = await useMultiFileAuthState(sessionDir)
                         isForwarded: true,
                         forwardedNewsletterMessageInfo: {
                             newsletterJid: '120363161513685998@newsletter',
-                            newsletterName: 'KnightBot MD',
+                            newsletterName: 'SethBot MD',
                             serverMessageId: -1
                         }
                     }
@@ -281,12 +281,12 @@ const { state, saveCreds } = await useMultiFileAuthState(sessionDir)
             }
 
             await delay(1999)
-            console.log(chalk.yellow(`\n\n                  ${chalk.bold.blue(`[ ${global.botname || 'KNIGHT BOT'} ]`)}\n\n`))
+            console.log(chalk.yellow(`\n\n                  ${chalk.bold.blue(`[ ${global.botname || 'SETH BOT'} ]`)}\n\n`))
             console.log(chalk.cyan(`< ================================================== >`))
-            console.log(chalk.magenta(`\n${global.themeemoji || '•'} YT CHANNEL: MR UNIQUE HACKER`))
+            console.log(chalk.magenta(`\n${global.themeemoji || '•'} YT CHANNEL: Seth Tech`))
             console.log(chalk.magenta(`${global.themeemoji || '•'} GITHUB: mrunqiuehacker`))
             console.log(chalk.magenta(`${global.themeemoji || '•'} WA NUMBER: ${owner}`))
-            console.log(chalk.magenta(`${global.themeemoji || '•'} CREDIT: MR UNIQUE HACKER`))
+            console.log(chalk.magenta(`${global.themeemoji || '•'} CREDIT: Seth Tech`))
             console.log(chalk.green(`${global.themeemoji || '•'} 🤖 Bot Connected Successfully! ✅`))
             console.log(chalk.blue(`Bot Version: ${settings.version}`))
         }
