@@ -1,5 +1,8 @@
 const axios = require('axios');
 const yts = require('yt-search');
+const fs = require('fs');
+const path = require('path');
+const YTDlpWrap = require('yt-dlp-wrap').default;
 
 const AXIOS_DEFAULTS = {
     timeout: 60000,
@@ -24,41 +27,6 @@ async function tryRequest(getter, attempts = 3) {
     throw lastError;
 }
 
-// EliteProTech API - Primary
-async function getEliteProTechVideoByUrl(youtubeUrl) {
-    const apiUrl = `https://eliteprotech-apis.zone.id/ytdown?url=${encodeURIComponent(youtubeUrl)}&format=mp4`;
-    const res = await tryRequest(() => axios.get(apiUrl, AXIOS_DEFAULTS));
-    if (res?.data?.success && res?.data?.downloadURL) {
-        return {
-            download: res.data.downloadURL,
-            title: res.data.title
-        };
-    }
-    throw new Error('EliteProTech ytdown returned no download');
-}
-
-async function getYupraVideoByUrl(youtubeUrl) {
-    const apiUrl = `https://api.yupra.my.id/api/downloader/ytmp4?url=${encodeURIComponent(youtubeUrl)}`;
-    const res = await tryRequest(() => axios.get(apiUrl, AXIOS_DEFAULTS));
-    if (res?.data?.success && res?.data?.data?.download_url) {
-        return {
-            download: res.data.data.download_url,
-            title: res.data.data.title,
-            thumbnail: res.data.data.thumbnail
-        };
-    }
-    throw new Error('Yupra returned no download');
-}
-
-async function getOkatsuVideoByUrl(youtubeUrl) {
-    const apiUrl = `https://okatsu-rolezapiiz.vercel.app/downloader/ytmp4?url=${encodeURIComponent(youtubeUrl)}`;
-    const res = await tryRequest(() => axios.get(apiUrl, AXIOS_DEFAULTS));
-    // shape: { status, creator, url, result: { status, title, mp4 } }
-    if (res?.data?.result?.mp4) {
-        return { download: res.data.result.mp4, title: res.data.result.title };
-    }
-    throw new Error('Okatsu ytmp4 returned no mp4');
-}
 
 async function videoCommand(sock, chatId, message) {
     try {
@@ -110,49 +78,48 @@ async function videoCommand(sock, chatId, message) {
             return;
         }
 
-        // Try multiple APIs with fallback chain: EliteProTech -> Yupra -> Okatsu
-        let videoData;
-        let downloadSuccess = false;
-        
-        // List of API methods to try
-        const apiMethods = [
-            { name: 'EliteProTech', method: () => getEliteProTechVideoByUrl(videoUrl) },
-            { name: 'Yupra', method: () => getYupraVideoByUrl(videoUrl) },
-            { name: 'Okatsu', method: () => getOkatsuVideoByUrl(videoUrl) }
-        ];
-        
-        // Try each API until we successfully get video data
-        for (const apiMethod of apiMethods) {
-            try {
-                videoData = await apiMethod.method();
-                const videoUrl_check = videoData.download || videoData.dl || videoData.url;
-                
-                if (!videoUrl_check) {
-                    console.log(`${apiMethod.name} returned no download URL, trying next API...`);
-                    continue; // Try next API
-                }
-                
-                downloadSuccess = true;
-                break; // Success! Exit the loop
-            } catch (apiErr) {
-                // API call failed, try next API
-                console.log(`${apiMethod.name} API failed:`, apiErr.message);
-                continue;
-            }
-        }
-        
-        // If all APIs failed, throw error
-        if (!downloadSuccess || !videoData) {
-            throw new Error('All download sources failed. The content may be unavailable or blocked in your region.');
-        }
+        const safeTitle = (videoTitle || 'video')
+    .replace(/[^\w\s-]/g, '')
+    .trim();
 
-        // Send video directly using the download URL
-        await sock.sendMessage(chatId, {
-            video: { url: videoData.download || videoData.dl || videoData.url },
-            mimetype: 'video/mp4',
-            fileName: `${(videoData.title || videoTitle || 'video').replace(/[^\w\s-]/g, '')}.mp4`,
-            caption: `*${videoData.title || videoTitle || 'Video'}*\n\n> *_Downloaded by Knight Bot MD_*`
-        }, { quoted: message });
+const tempFile = path.join(
+    '/tmp',
+    `${Date.now()}-${safeTitle}.mp4`
+);
+
+const ytDlp = new YTDlpWrap();
+
+await ytDlp.execPromise([
+    '-f',
+    '18',
+    '-o',
+    tempFile,
+    videoUrl
+]);
+
+if (!fs.existsSync(tempFile)) {
+    throw new Error('Video download failed');
+}
+
+const stats = fs.statSync(tempFile);
+
+if (stats.size > 100 * 1024 * 1024) {
+    fs.unlinkSync(tempFile);
+    throw new Error('Video exceeds WhatsApp size limit');
+}
+
+const buffer = fs.readFileSync(tempFile);
+
+await sock.sendMessage(chatId, {
+    video: buffer,
+    mimetype: 'video/mp4',
+    fileName: `${safeTitle}.mp4`,
+    caption: `*${videoTitle || safeTitle}*\n\n> *_Downloaded by Knight Bot MD_*`
+}, { quoted: message });
+
+try {
+    fs.unlinkSync(tempFile);
+} catch {}
 
 
     } catch (error) {
