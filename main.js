@@ -235,7 +235,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
         // Read bot mode once; don't early-return so moderation can still run in private mode
         let isPublic = true;
         try {
-            const data = JSON.parse(fs.readFileSync('./data/messageCount.json'));
+            const data = JSON.parse(fs.readFileSync(`${process.env.DATA_DIR || './data'}/messageCount.json`));
             if (typeof data.isPublic === 'boolean') isPublic = data.isPublic;
         } catch (error) {
             console.error('Error checking access mode:', error);
@@ -456,7 +456,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
                 // Read current data first
                 let data;
                 try {
-                    data = JSON.parse(fs.readFileSync('./data/messageCount.json'));
+                    data = JSON.parse(fs.readFileSync(`${process.env.DATA_DIR || './data'}/messageCount.json`));
                 } catch (error) {
                     console.error('Error reading access mode:', error);
                     await sock.sendMessage(chatId, { text: 'Failed to read bot mode status', ...channelInfo });
@@ -487,7 +487,7 @@ async function handleMessages(sock, messageUpdate, printLog) {
                     data.isPublic = action === 'public';
 
                     // Save updated data
-                    fs.writeFileSync('./data/messageCount.json', JSON.stringify(data, null, 2));
+                    fs.writeFileSync(`${process.env.DATA_DIR || './data'}/messageCount.json`, JSON.stringify(data, null, 2));
 
                     await sock.sendMessage(chatId, { text: `Bot is now in *${action}* mode`, ...channelInfo });
                 } catch (error) {
@@ -1225,7 +1225,7 @@ async function handleGroupParticipantUpdate(sock, update) {
         // Respect bot mode: only announce promote/demote in public mode
         let isPublic = true;
         try {
-            const modeData = JSON.parse(fs.readFileSync('./data/messageCount.json'));
+            const modeData = JSON.parse(fs.readFileSync(`${process.env.DATA_DIR || './data'}/messageCount.json`));
             if (typeof modeData.isPublic === 'boolean') isPublic = modeData.isPublic;
         } catch (e) {
             // If reading fails, default to public behavior

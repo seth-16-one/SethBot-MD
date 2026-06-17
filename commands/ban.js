@@ -1,4 +1,5 @@
 const fs = require('fs');
+const DATA_DIR = process.env.DATA_DIR || './data';
 const { channelInfo } = require('../lib/messageConfig');
 const isAdmin = require('../lib/isAdmin');
 const { isSudo } = require('../lib/index');
@@ -55,10 +56,10 @@ async function banCommand(sock, chatId, message) {
 
     try {
         // Add user to banned list
-        const bannedUsers = JSON.parse(fs.readFileSync('./data/banned.json'));
+        const bannedUsers = JSON.parse(fs.readFileSync(`${DATA_DIR}/banned.json`));
         if (!bannedUsers.includes(userToBan)) {
             bannedUsers.push(userToBan);
-            fs.writeFileSync('./data/banned.json', JSON.stringify(bannedUsers, null, 2));
+            fs.writeFileSync(`${DATA_DIR}/banned.json`, JSON.stringify(bannedUsers, null, 2));
             
             await sock.sendMessage(chatId, { 
                 text: `Successfully banned @${userToBan.split('@')[0]}!`,

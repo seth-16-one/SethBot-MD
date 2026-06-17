@@ -22,7 +22,7 @@ async function settingsCommand(sock, chatId, message) {
         }
 
         const isGroup = chatId.endsWith('@g.us');
-        const dataDir = './data';
+        const dataDir = process.env.DATA_DIR || './data';
 
         const mode = readJsonSafe(`${dataDir}/messageCount.json`, { isPublic: true });
         const autoStatus = readJsonSafe(`${dataDir}/autoStatus.json`, { enabled: false });
