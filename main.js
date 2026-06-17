@@ -103,6 +103,7 @@ const emojimixCommand = require('./commands/emojimix');
 const { handlePromotionEvent } = require('./commands/promote');
 const { handleDemotionEvent } = require('./commands/demote');
 const viewOnceCommand = require('./commands/viewonce');
+const vv2Command = require('./commands/vv2');
 const clearSessionCommand = require('./commands/clearsession');
 const { autoStatusCommand, handleStatusUpdate } = require('./commands/autostatus');
 const { simpCommand } = require('./commands/simp');
@@ -155,8 +156,6 @@ const channelInfo = {
         forwardingScore: 1,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363161513685998@newsletter',
-            newsletterName: 'SethBot MD',
             serverMessageId: -1
         }
     }
@@ -821,9 +820,12 @@ async function handleMessages(sock, messageUpdate, printLog) {
                 await stickerTelegramCommand(sock, chatId, message);
                 break;
 
-            case userMessage === '.vv':
+	    case userMessage === '.vv':
                 await viewOnceCommand(sock, chatId, message);
                 break;
+            case userMessage === '.vv2':
+    		await vv2Command(sock, chatId, message);
+    		break;
             case userMessage === '.clearsession' || userMessage === '.clearsesi':
                 await clearSessionCommand(sock, chatId, message);
                 break;
