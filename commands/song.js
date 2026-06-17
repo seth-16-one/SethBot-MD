@@ -67,6 +67,20 @@ async function getOkatsuDownloadByUrl(youtubeUrl) {
 	throw new Error('Okatsu ytmp3 returned no download');
 }
 
+async function getRavennDownloadByUrl(youtubeUrl) {
+        const apiUrl = `https://ravenn.site/download/audio?url=${encodeURIComponent(youtubeUrl)}`;
+        const res = await tryRequest(() => axios.get(apiUrl, AXIOS_DEFAULTS));
+
+        if (res?.data?.status && res?.data?.result) {
+                return {
+                        download: res.data.result,
+                        title: 'YouTube Audio'
+                };
+        }
+
+        throw new Error('Ravenn returned no download');
+}
+
 async function songCommand(sock, chatId, message) {
     try {
         const text = message.message?.conversation || message.message?.extendedTextMessage?.text || '';
@@ -99,11 +113,12 @@ async function songCommand(sock, chatId, message) {
 		let downloadSuccess = false;
 		
 		// List of API methods to try
-		const apiMethods = [
-			{ name: 'EliteProTech', method: () => getEliteProTechDownloadByUrl(video.url) },
-			{ name: 'Yupra', method: () => getYupraDownloadByUrl(video.url) },
-			{ name: 'Okatsu', method: () => getOkatsuDownloadByUrl(video.url) }
-		];
+const apiMethods = [
+        { name: 'Ravenn', method: () => getRavennDownloadByUrl(video.url) },
+        { name: 'EliteProTech', method: () => getEliteProTechDownloadByUrl(video.url) },
+        { name: 'Yupra', method: () => getYupraDownloadByUrl(video.url) },
+        { name: 'Okatsu', method: () => getOkatsuDownloadByUrl(video.url) }
+];
 		
 		// Try each API until we successfully download audio
 		for (const apiMethod of apiMethods) {

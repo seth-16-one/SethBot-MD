@@ -1,6 +1,7 @@
+const DATA_DIR = require('../lib/dataDir')
 const fs = require('fs');
 
-const ANTICALL_PATH = './data/anticall.json';
+const ANTICALL_PATH = DATA_DIR + '/anticall.json';
 
 function readState() {
     try {

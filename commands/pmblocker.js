@@ -1,7 +1,8 @@
+const DATA_DIR = require('../lib/dataDir')
 const fs = require('fs');
 const isOwnerOrSudo = require('../lib/isOwner');
 
-const PMBLOCKER_PATH = './data/pmblocker.json';
+const PMBLOCKER_PATH = DATA_DIR + '/pmblocker.json';
 
 function readState() {
     try {
