@@ -7,3 +7,4 @@ temp/
 baileys_store.json
 *player-script.js
 
+data/messageCount.json
