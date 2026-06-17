@@ -1,10 +1,14 @@
-# 🤖 Seth Bot
+# 🤖 SethBot-MD
 
-This is a WhatsApp bot built using the Baileys library for group management, including features like tagging all members, muting/unmuting, and many more. It's designed to help admins efficiently manage WhatsApp groups.
+SethBot-MD is a powerful Multi-Device WhatsApp Bot built with the Baileys library, designed for automation, moderation, media management, utility tools, and advanced WhatsApp experiences.
+
+Developed and maintained by Seth Tech, SethBot-MD provides a reliable and feature-rich platform for WhatsApp users, communities, businesses, and administrators.
+
+Built upon the foundation of the KnightBot project, SethBot-MD continues to expand with new features, performance improvements, and custom integrations while acknowledging the contributions of the original developers and the open-source community.
 
 <div align="center"> 
   <a href="https://git.io/typing-svg"> 
-    <img src="https://readme-typing-svg.demolab.com?font=Ribeye&size=50&pause=1000&color=33ff00&center=true&width=910&height=100&lines=Seth-Bot;Multi+Device+Whatsapp+Bot;Coded+By+Professor" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.demolab.com?font=Ribeye&size=50&pause=1000&color=33ff00&center=true&width=910&height=100&lines=Seth-Bot;Multi+Device+Whatsapp+Bot;Developed+By+Seth+Tech" alt="Typing SVG" />
   </a> 
 </div> 
 
@@ -88,6 +92,37 @@ For further customization and setup guidance, click the button below:
 </div>
 
 ### Deploy on VPS
+
+## 🖥️ Oracle VPS Installation
+
+### Create Shared Bot Directory
+
+```bash
+mkdir -p /opt/whatsapp-bots/shared
+cd /opt/whatsapp-bots/shared
+```
+
+### Clone SethBot-MD
+
+```bash
+git clone https://github.com/seth-16-one/SethBot-MD.git
+cd SethBot-MD
+```
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Start Bot With PM2
+
+```bash
+pm2 start index.js --name seth-bot
+pm2 save
+pm2 startup
+```
+
 
 <div align="center">
   <a href="https://client.petrosky.io/aff.php?aff=394" target="_blank">
@@ -208,12 +243,27 @@ If you like this project, please give it a [⭐️ star on GitHub](https://githu
 
 ## Credits
 
-- [Professor](https://github.com/seth-16-one)
+- [Seth Tech](https://github.com/seth-16-one)
 - [Baileys](https://github.com/adiwajshing/Baileys)
 - [TechGod143](https://github.com/TechGod143) for pair code
 - [Dgxeon](https://github.com/Dgxeon) for pair code
 
 ---
+
+## 🙏 Acknowledgements
+
+SethBot-MD is built upon the open-source efforts of many developers and projects.
+
+Special thanks to:
+
+- KnightBot-MD Project
+- Mr Unique Hacker
+- Baileys Team
+- TechGod143
+- Dgxeon
+- Open Source Contributors
+
+for providing the foundation and inspiration that made SethBot-MD possible.
 
 ## ⚠️ Important Warning
 
@@ -236,7 +286,7 @@ This project is licensed under the MIT License. However, you must:
 
 ## 📜 Copyright Notice
 
-Copyright (c) 2024 Professor. All rights reserved.
+Copyright (c) 2026 Seth Tech. All rights reserved.
 
 This project contains code from various open source projects:
 - Baileys (MIT License)
