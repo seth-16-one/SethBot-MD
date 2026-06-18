@@ -6,5 +6,8 @@ temp/
 *.mp3
 baileys_store.json
 *player-script.js
-
 data/messageCount.json
+session-backup*/
+auth_info*/
+creds.json
+*.db
