@@ -3,262 +3,216 @@ const fs = require('fs');
 const path = require('path');
 
 async function helpCommand(sock, chatId, message) {
-    const helpMessage = `
-╔═══════════════════╗
-   *🤖 ${settings.botName || 'SethBot-MD'}*  
-   Version: *${settings.version || '3.0.0'}*
-   by ${settings.botOwner || 'Seth Tech'}
-   YT : ${global.ytch}
-╚═══════════════════╝
+const helpMessage = `
+╔══════════════════════╗
+🤖 *${settings.botName || 'SethBot-MD'}*
+⚡ Version: ${settings.version || '3.0.7'}
+👑 Owner: ${settings.botOwner || 'Seth Tech'}
+📺 YouTube: ${global.ytch}
+╚══════════════════════╝
 
-*Available Commands:*
-
-╔═══════════════════╗
-🌐 *General Commands*:
-║ ➤ .help or .menu
+╔══════════════════════╗
+🌐 *GENERAL*
+║ ➤ .help / .menu
 ║ ➤ .ping
 ║ ➤ .alive
-║ ➤ .tts <text>
 ║ ➤ .owner
-║ ➤ .joke
-║ ➤ .quote
-║ ➤ .fact
-║ ➤ .weather <city>
-║ ➤ .news
-║ ➤ .attp <text>
-║ ➤ .lyrics <song_title>
-║ ➤ .8ball <question>
-║ ➤ .groupinfo
-║ ➤ .staff or .admins 
-║ ➤ .vv
-║ ➤ .vv2
-║ ➤ .trt <text> <lang>
-║ ➤ .ss <link>
 ║ ➤ .jid
 ║ ➤ .url
-╚═══════════════════╝ 
+║ ➤ .weather <city>
+║ ➤ .news
+║ ➤ .quote
+║ ➤ .fact
+║ ➤ .joke
+║ ➤ .groupinfo
+║ ➤ .staff
+║ ➤ .admins
+╚══════════════════════╝
 
-╔═══════════════════╗
-👮‍♂️ *Admin Commands*:
-║ ➤ .ban @user
-║ ➤ .promote @user
-║ ➤ .demote @user
-║ ➤ .mute <minutes>
-║ ➤ .unmute
-║ ➤ .delete or .del
-║ ➤ .kick @user
-║ ➤ .warnings @user
-║ ➤ .warn @user
-║ ➤ .antilink
-║ ➤ .antibadword
-║ ➤ .clear
-║ ➤ .tag <message>
-║ ➤ .tagall
-║ ➤ .tagnotadmin
-║ ➤ .hidetag <message>
-║ ➤ .chatbot
-║ ➤ .resetlink
-║ ➤ .antitag <on/off>
-║ ➤ .welcome <on/off>
-║ ➤ .goodbye <on/off>
-║ ➤ .setgdesc <description>
-║ ➤ .setgname <new name>
-║ ➤ .setgpp (reply to image)
-╚═══════════════════╝
+╔══════════════════════╗
+🔍 *SEARCH & STALK*
+║ ➤ .gitstalk <user>
+║ ➤ .wastalk <number>
+║ ➤ .movie <name>
+║ ➤ .lyrics <song>
+║ ➤ .github
+║ ➤ .repo
+║ ➤ .script
+╚══════════════════════╝
 
-╔═══════════════════╗
-🔒 *Owner Commands*:
-║ ➤ .mode <public/private>
-║ ➤ .clearsession
-║ ➤ .antidelete
-║ ➤ .cleartmp
-║ ➤ .update
-║ ➤ .settings
-║ ➤ .setpp <reply to image>
-║ ➤ .autoreact <on/off>
-║ ➤ .autostatus <on/off>
-║ ➤ .autostatus react <on/off>
-║ ➤ .autotyping <on/off>
-║ ➤ .autoread <on/off>
-║ ➤ .anticall <on/off>
-║ ➤ .pmblocker <on/off/status>
-║ ➤ .pmblocker setmsg <text>
-║ ➤ .setmention <reply to msg>
-║ ➤ .mention <on/off>
-╚═══════════════════╝
+╔══════════════════════╗
+🛠️ *TOOLS*
+║ ➤ .translate
+║ ➤ .trt
+║ ➤ .langs
+║ ➤ .ocr
+║ ➤ .ocrpdf
+║ ➤ .tts <text>
+║ ➤ .ss <url>
+║ ➤ .vv
+║ ➤ .vv2
+╚══════════════════════╝
 
-╔═══════════════════╗
-🎨 *Image/Sticker Commands*:
-║ ➤ .blur <image>
-║ ➤ .simage <reply to sticker>
-║ ➤ .sticker <reply to image>
+╔══════════════════════╗
+📥 *DOWNLOADERS*
+║ ➤ .play <song>
+║ ➤ .song <song>
+║ ➤ .spotify <query>
+║ ➤ .video <song>
+║ ➤ .ytmp4 <url>
+║ ➤ .facebook <url>
+║ ➤ .instagram <url>
+║ ➤ .tiktok <url>
+╚══════════════════════╝
+
+╔══════════════════════╗
+🎨 *MEDIA*
+║ ➤ .sticker
+║ ➤ .take
+║ ➤ .blur
+║ ➤ .crop
 ║ ➤ .removebg
 ║ ➤ .remini
-║ ➤ .crop <reply to image>
-║ ➤ .tgsticker <Link>
+║ ➤ .simage
 ║ ➤ .meme
-║ ➤ .take <packname> 
-║ ➤ .emojimix <emj1>+<emj2>
-║ ➤ .igs <insta link>
-║ ➤ .igsc <insta link>
-╚═══════════════════╝  
+║ ➤ .tgsticker
+║ ➤ .emojimix
+╚══════════════════════╝
 
-╔═══════════════════╗
-🖼️ *Pies Commands*:
-║ ➤ .pies <country>
-║ ➤ .china 
-║ ➤ .indonesia 
-║ ➤ .japan 
-║ ➤ .korea 
-║ ➤ .hijab
-╚═══════════════════╝
+╔══════════════════════╗
+🤖 *AI*
+║ ➤ .gpt
+║ ➤ .gemini
+║ ➤ .imagine
+║ ➤ .flux
+║ ➤ .sora
+╚══════════════════════╝
 
-╔═══════════════════╗
-🎮 *Game Commands*:
-║ ➤ .tictactoe @user
+╔══════════════════════╗
+👮 *GROUP ADMIN*
+║ ➤ .ban
+║ ➤ .kick
+║ ➤ .warn
+║ ➤ .warnings
+║ ➤ .promote
+║ ➤ .demote
+║ ➤ .mute
+║ ➤ .unmute
+║ ➤ .delete
+║ ➤ .tag
+║ ➤ .tagall
+║ ➤ .tagnotadmin
+║ ➤ .hidetag
+║ ➤ .antilink
+║ ➤ .antitag
+║ ➤ .welcome
+║ ➤ .goodbye
+╚══════════════════════╝
+
+╔══════════════════════╗
+🎮 *GAMES*
+║ ➤ .tictactoe
 ║ ➤ .hangman
-║ ➤ .guess <letter>
+║ ➤ .guess
 ║ ➤ .trivia
-║ ➤ .answer <answer>
+║ ➤ .answer
 ║ ➤ .truth
 ║ ➤ .dare
-╚═══════════════════╝
+║ ➤ .8ball
+╚══════════════════════╝
 
-╔═══════════════════╗
-🤖 *AI Commands*:
-║ ➤ .gpt <question>
-║ ➤ .gemini <question>
-║ ➤ .imagine <prompt>
-║ ➤ .flux <prompt>
-║ ➤ .sora <prompt>
-╚═══════════════════╝
-
-╔═══════════════════╗
-🎯 *Fun Commands*:
-║ ➤ .compliment @user
-║ ➤ .insult @user
-║ ➤ .flirt 
+╔══════════════════════╗
+🎭 *FUN*
+║ ➤ .compliment
+║ ➤ .insult
+║ ➤ .flirt
 ║ ➤ .shayari
 ║ ➤ .goodnight
 ║ ➤ .roseday
-║ ➤ .character @user
-║ ➤ .wasted @user
-║ ➤ .ship @user
-║ ➤ .simp @user
-║ ➤ .stupid @user [text]
-╚═══════════════════╝
+║ ➤ .ship
+║ ➤ .simp
+║ ➤ .character
+║ ➤ .stupid
+╚══════════════════════╝
 
-╔═══════════════════╗
-🔤 *Textmaker*:
-║ ➤ .metallic <text>
-║ ➤ .ice <text>
-║ ➤ .snow <text>
-║ ➤ .impressive <text>
-║ ➤ .matrix <text>
-║ ➤ .light <text>
-║ ➤ .neon <text>
-║ ➤ .devil <text>
-║ ➤ .purple <text>
-║ ➤ .thunder <text>
-║ ➤ .leaves <text>
-║ ➤ .1917 <text>
-║ ➤ .arena <text>
-║ ➤ .hacker <text>
-║ ➤ .sand <text>
-║ ➤ .blackpink <text>
-║ ➤ .glitch <text>
-║ ➤ .fire <text>
-╚═══════════════════╝
+╔══════════════════════╗
+🔤 *TEXT MAKER*
+║ ➤ .metallic
+║ ➤ .ice
+║ ➤ .snow
+║ ➤ .matrix
+║ ➤ .light
+║ ➤ .neon
+║ ➤ .devil
+║ ➤ .purple
+║ ➤ .thunder
+║ ➤ .glitch
+║ ➤ .fire
+╚══════════════════════╝
 
-╔═══════════════════╗
-📥 *Downloader*:
-║ ➤ .play <song_name>
-║ ➤ .song <song_name>
-║ ➤ .spotify <query>
-║ ➤ .instagram <link>
-║ ➤ .facebook <link>
-║ ➤ .tiktok <link>
-║ ➤ .video <song name>
-║ ➤ .ytmp4 <Link>
-╚═══════════════════╝
+╔══════════════════════╗
+🖼️ *ANIME*
+║ ➤ .nom
+║ ➤ .poke
+║ ➤ .cry
+║ ➤ .kiss
+║ ➤ .pat
+║ ➤ .hug
+║ ➤ .wink
+║ ➤ .facepalm
+╚══════════════════════╝
 
-╔═══════════════════╗
-🧩 *MISC*:
-║ ➤ .heart
-║ ➤ .horny
-║ ➤ .circle
-║ ➤ .lgbt
-║ ➤ .lolice
-║ ➤ .its-so-stupid
-║ ➤ .namecard 
-║ ➤ .oogway
-║ ➤ .tweet
-║ ➤ .ytcomment 
-║ ➤ .comrade 
-║ ➤ .gay 
-║ ➤ .glass 
-║ ➤ .jail 
-║ ➤ .passed 
-║ ➤ .triggered
-╚═══════════════════╝
+╔══════════════════════╗
+🔒 *OWNER*
+║ ➤ .mode
+║ ➤ .settings
+║ ➤ .update
+║ ➤ .clearsession
+║ ➤ .cleartmp
+║ ➤ .autoreact
+║ ➤ .autoread
+║ ➤ .autotyping
+║ ➤ .autostatus
+║ ➤ .anticall
+║ ➤ .pmblocker
+║ ➤ .setmention
+║ ➤ .mention
+║ ➤ .vps
+╚══════════════════════╝
 
-╔═══════════════════╗
-🖼️ *ANIME*:
-║ ➤ .nom 
-║ ➤ .poke 
-║ ➤ .cry 
-║ ➤ .kiss 
-║ ➤ .pat 
-║ ➤ .hug 
-║ ➤ .wink 
-║ ➤ .facepalm 
-╚═══════════════════╝
+📢 Join our channel for updates
+🔗 https://whatsapp.com/channel/0029VauzXsXGOj9gh3gGOz27
+⚡ SethBot-MD • Powered by Telmass
+`;
 
-╔═══════════════════╗
-💻 *Github Commands:*
-║ ➤ .git
-║ ➤ .github
-║ ➤ .sc
-║ ➤ .script
-║ ➤ .repo
-╚═══════════════════╝
+try {
+const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
 
-Join our channel for updates:`;
+if (fs.existsSync(imagePath)) {
+const imageBuffer = fs.readFileSync(imagePath);
 
-    try {
-        const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
-        
-        if (fs.existsSync(imagePath)) {
-            const imageBuffer = fs.readFileSync(imagePath);
-            
-            await sock.sendMessage(chatId, {
-                image: imageBuffer,
-                caption: helpMessage,
-                contextInfo: {
-                    forwardingScore: 1,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        serverMessageId: -1
-                    }
-                }
-            },{ quoted: message });
-        } else {
-            console.error('Bot image not found at:', imagePath);
-            await sock.sendMessage(chatId, { 
-                text: helpMessage,
-                contextInfo: {
-                    forwardingScore: 1,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        serverMessageId: -1
-                    } 
-                }
-            });
-        }
-    } catch (error) {
-        console.error('Error in help command:', error);
-        await sock.sendMessage(chatId, { text: helpMessage });
-    }
+await sock.sendMessage(chatId, {
+image: imageBuffer,
+caption: helpMessage,
+contextInfo: {
+forwardingScore: 1,
+isForwarded: true
+}
+}, { quoted: message });
+
+} else {
+await sock.sendMessage(chatId, {
+text: helpMessage
+}, { quoted: message });
+}
+
+} catch (error) {
+console.error('Help Error:', error);
+await sock.sendMessage(chatId, {
+text: helpMessage
+}, { quoted: message });
+}
 }
 
 module.exports = helpCommand;
+

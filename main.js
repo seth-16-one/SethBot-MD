@@ -1,4 +1,3 @@
-// 🧹 Fix for ENOSPC / temp overflow in hosted panels
 const fs = require('fs');
 const path = require('path');
 
@@ -83,10 +82,18 @@ const { truthCommand } = require('./commands/truth');
 const { clearCommand } = require('./commands/clear');
 const pingCommand = require('./commands/ping');
 const aliveCommand = require('./commands/alive');
+const uptimeCommand = require('./commands/uptime');
+const statsCommand = require('./commands/stats');
 const blurCommand = require('./commands/img-blur');
 const { welcomeCommand, handleJoinEvent } = require('./commands/welcome');
 const { goodbyeCommand, handleLeaveEvent } = require('./commands/goodbye');
 const githubCommand = require('./commands/github');
+const wastalkCommand = require('./commands/wastalk');
+const langsCommand = require('./commands/langs');
+const vpsCommand = require('./commands/vps');
+const movieCommand = require('./commands/movie');
+const gitstalkCommand = require('./commands/gitstalk');
+const ocrpdfCommand = require('./commands/ocrpdf');
 const { handleAntiBadwordCommand, handleBadwordDetection } = require('./lib/antibadword');
 const antibadwordCommand = require('./commands/antibadword');
 const { handleChatbotCommand, handleChatbotResponse } = require('./commands/chatbot');
@@ -104,6 +111,7 @@ const { handlePromotionEvent } = require('./commands/promote');
 const { handleDemotionEvent } = require('./commands/demote');
 const viewOnceCommand = require('./commands/viewonce');
 const vv2Command = require('./commands/vv2');
+const saveCommand = require('./commands/save');
 const clearSessionCommand = require('./commands/clearsession');
 const { autoStatusCommand, handleStatusUpdate } = require('./commands/autostatus');
 const { simpCommand } = require('./commands/simp');
@@ -142,6 +150,7 @@ const { igsCommand } = require('./commands/igs');
 const { anticallCommand, readState: readAnticallState } = require('./commands/anticall');
 const { pmblockerCommand, readState: readPmBlockerState } = require('./commands/pmblocker');
 const settingsCommand = require('./commands/settings');
+const ocrCommand = require('./commands/ocr');
 const soraCommand = require('./commands/sora');
 
 // Global settings
@@ -674,6 +683,19 @@ async function handleMessages(sock, messageUpdate, printLog) {
             case userMessage === '.alive':
                 await aliveCommand(sock, chatId, message);
                 break;
+	    case userMessage === '.uptime':
+   		 await uptimeCommand(sock, chatId, message);
+		break;
+	    case userMessage === '.stats':
+ 		await statsCommand(sock, chatId, message);
+   		break;
+	    case userMessage === '.ocr':
+		await ocrCommand(sock, chatId, message);
+		break;
+	    
+case userMessage === '.ocrpdf':
+    		await ocrpdfCommand(sock, chatId, message);
+    		break;
             case userMessage.startsWith('.mention '):
                 {
                     const args = userMessage.split(' ').slice(1).join(' ');
@@ -732,6 +754,12 @@ async function handleMessages(sock, messageUpdate, printLog) {
             case userMessage === '.repo':
                 await githubCommand(sock, chatId, message);
                 break;
+	    case userMessage.startsWith('.gitstalk'):
+    		await gitstalkCommand(sock, chatId, message);
+    		break;
+	    case userMessage.startsWith('.wastalk'):
+    		await wastalkCommand(sock, chatId, message);
+    		break;
             case userMessage.startsWith('.antibadword'):
                 if (!isGroup) {
                     await sock.sendMessage(chatId, { text: 'This command can only be used in groups.', ...channelInfo }, { quoted: message });
@@ -825,6 +853,10 @@ async function handleMessages(sock, messageUpdate, printLog) {
                 break;
             case userMessage === '.vv2':
     		await vv2Command(sock, chatId, message);
+    		break;
+      	    case userMessage === '.save':
+	    case userMessage === '.forward':
+    		await saveCommand(sock, chatId, message);
     		break;
             case userMessage === '.clearsession' || userMessage === '.clearsesi':
                 await clearSessionCommand(sock, chatId, message);
@@ -943,6 +975,9 @@ async function handleMessages(sock, messageUpdate, printLog) {
             case userMessage.startsWith('.video') || userMessage.startsWith('.ytmp4'):
                 await videoCommand(sock, chatId, message);
                 break;
+	    case userMessage.startsWith('.movie') || userMessage.startsWith('.mv'):
+    		await movieCommand(sock, chatId, message);
+    		break;
             case userMessage.startsWith('.tiktok') || userMessage.startsWith('.tt'):
                 await tiktokCommand(sock, chatId, message);
                 break;
@@ -952,7 +987,14 @@ async function handleMessages(sock, messageUpdate, printLog) {
             case userMessage.startsWith('.translate') || userMessage.startsWith('.trt'):
                 const commandLength = userMessage.startsWith('.translate') ? 10 : 4;
                 await handleTranslateCommand(sock, chatId, message, userMessage.slice(commandLength));
-                return;
+                return
+	    case userMessage === '.langs':
+       	    case userMessage === '.languages':
+    		await langsCommand(sock, chatId, message);
+    		return;;
+	    case userMessage === '.vps':
+    		await vpsCommand(sock, chatId, message);
+    		break;
             case userMessage.startsWith('.ss') || userMessage.startsWith('.ssweb') || userMessage.startsWith('.screenshot'):
                 const ssCommandLength = userMessage.startsWith('.screenshot') ? 11 : (userMessage.startsWith('.ssweb') ? 6 : 3);
                 await handleSsCommand(sock, chatId, message, userMessage.slice(ssCommandLength).trim());

@@ -1,33 +1,55 @@
-const moment = require('moment-timezone');
-const fetch = require('node-fetch');
 const fs = require('fs');
 const path = require('path');
-
+const settings = require('../settings');
 
 async function githubCommand(sock, chatId, message) {
-  try {
-    const res = await fetch('https://api.github.com/repos/seth-16-one/SethBot-MD');
-    if (!res.ok) throw new Error('Error fetching repository data');
-    const json = await res.json();
+    try {
+        let txt = `*乂 ${settings.botName} 乂*\n\n`;
 
-    let txt = `*乂  SethBot-MD  乂*\n\n`;
-    txt += `✩  *Name* : ${json.name}\n`;
-    txt += `✩  *Watchers* : ${json.watchers_count}\n`;
-    txt += `✩  *Size* : ${(json.size / 1024).toFixed(2)} MB\n`;
-    txt += `✩  *Last Updated* : ${moment(json.updated_at).format('DD/MM/YY - HH:mm:ss')}\n`;
-    txt += `✩  *URL* : ${json.html_url}\n`;
-    txt += `✩  *Forks* : ${json.forks_count}\n`;
-    txt += `✩  *Stars* : ${json.stargazers_count}\n\n`;
-    txt += `💥 *SethBot MD*`;
+        txt += `✩ *Bot Name* : ${settings.botName}\n`;
+        txt += `✩ *Version* : ${settings.version}\n`;
+        txt += `✩ *Owner* : ${settings.botOwner}\n`;
+        txt += `✩ *Number* : ${settings.ownerNumber}\n`;
+        txt += `✩ *Mode* : ${settings.commandMode}\n\n`;
 
-    // Use the local asset image
-    const imgPath = path.join(__dirname, '../assets/bot_image.jpg');
-    const imgBuffer = fs.readFileSync(imgPath);
+        txt += `📂 *GitHub Repository*\n`;
+        txt += `https://github.com/seth-16-one/SethBot-MD\n\n`;
 
-    await sock.sendMessage(chatId, { image: imgBuffer, caption: txt }, { quoted: message });
-  } catch (error) {
-    await sock.sendMessage(chatId, { text: '❌ Error fetching repository information.' }, { quoted: message });
-  }
+        txt += `🚀 *Features*\n`;
+        txt += `• Group Management\n`;
+        txt += `• AI Commands\n`;
+        txt += `• Media Downloader\n`;
+        txt += `• OCR Scanner\n`;
+        txt += `• Antilink Protection\n`;
+        txt += `• Antidelete System\n`;
+        txt += `• Sticker Tools\n`;
+        txt += `• Fun Commands\n\n`;
+
+        txt += `💥 *Powered By Seth Tech*`;
+
+        const imgPath = path.join(__dirname, '../assets/bot_image.jpg');
+        const imgBuffer = fs.readFileSync(imgPath);
+
+        await sock.sendMessage(
+            chatId,
+            {
+                image: imgBuffer,
+                caption: txt
+            },
+            { quoted: message }
+        );
+
+    } catch (error) {
+        console.error('GitHub Command Error:', error);
+
+        await sock.sendMessage(
+            chatId,
+            {
+                text: '❌ Failed to load repository information.'
+            },
+            { quoted: message }
+        );
+    }
 }
 
-module.exports = githubCommand; 
+module.exports = githubCommand;
