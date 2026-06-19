@@ -4,10 +4,15 @@
 Powerful WhatsApp Multi-Device Bot
 
 <p align="center">
-<img src="https://img.shields.io/badge/Version-3.x-success?style=for-the-badge&logo=github">
-<img src="https://img.shields.io/badge/Node.js-20+-green?style=for-the-badge&logo=node.js">
-<img src="https://img.shields.io/badge/Baileys-Latest-blue?style=for-the-badge">
-<img src="https://img.shields.io/badge/Platform-WhatsApp-brightgreen?style=for-the-badge&logo=whatsapp">
+
+<a href="https://knight-bot-paircode.onrender.com">
+<img src="https://img.shields.io/badge/PAIR-NOW-success?style=for-the-badge&logo=whatsapp">
+</a>
+
+<a href="https://github.com/seth-16-one/SethBot-MD">
+<img src="https://img.shields.io/badge/GITHUB-Repository-black?style=for-the-badge&logo=github">
+</a>
+
 </p><p align="center">
 <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&size=24&duration=3000&pause=1000&center=true&vCenter=true&width=700&lines=SETHBOT-MD;WhatsApp+Multi+Device+Bot;Pairing+Code+Support;Multi-Customer+Architecture;Powered+by+Seth+Tech" />
 </p>""PAIR NOW" (https://img.shields.io/badge/PAIR-NOW-success?style=for-the-badge&logo=whatsapp)" (https://knight-bot-paircode.onrender.com)
