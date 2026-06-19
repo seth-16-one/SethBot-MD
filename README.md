@@ -1,227 +1,245 @@
 
-SethBot-MD
+<div align="center"><img src="./assets/bot-image.jpg" width="250"/>⚡ SETHBOT-MD ⚡
 
-A powerful WhatsApp Multi-Device bot built with Baileys and Node.js.
+Powerful WhatsApp Multi-Device Bot
 
-Features
+<p align="center">
+<img src="https://img.shields.io/badge/Version-3.x-success?style=for-the-badge&logo=github">
+<img src="https://img.shields.io/badge/Node.js-20+-green?style=for-the-badge&logo=node.js">
+<img src="https://img.shields.io/badge/Baileys-Latest-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/Platform-WhatsApp-brightgreen?style=for-the-badge&logo=whatsapp">
+</p><p align="center">
+<img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&size=24&duration=3000&pause=1000&center=true&vCenter=true&width=700&lines=SETHBOT-MD;WhatsApp+Multi+Device+Bot;Pairing+Code+Support;Multi-Customer+Architecture;Powered+by+Seth+Tech" />
+</p>""PAIR NOW" (https://img.shields.io/badge/PAIR-NOW-success?style=for-the-badge&logo=whatsapp)" (https://knight-bot-paircode.onrender.com)
+
+""GITHUB" (https://img.shields.io/badge/GITHUB-Repository-black?style=for-the-badge&logo=github)" (https://github.com/seth-16-one/SethBot-MD)
+
+</div>---
+
+✨ Features
 
 - Pairing Code Login
-- Multi-Device Support
+- WhatsApp Multi Device
 - Auto Read
+- Auto Typing
 - Auto Status View
-- Auto Status Reactions
+- Status Reactions
 - Anti Delete
 - Anti Link
-- Anti Bad Word
+- Anti Badword
 - PM Blocker
 - Anti Call
 - AI Commands
-- Media Downloaders
+- Downloaders
+- Games
 - Group Management
-- Games & Fun Commands
-- Multi-Customer Support
-- VPS Ready
+- Stickers
+- Image Tools
+- Multi-Customer Architecture
 - PM2 Ready
+- VPS Ready
 
 ---
 
-Requirements
-
-- Node.js 20+
-- Git
-- PM2
-- Linux VPS (Ubuntu, Debian, Oracle Linux)
-
----
-
-Installation
+📦 Installation
 
 Clone Repository
 
+```bash
 git clone https://github.com/seth-16-one/SethBot-MD.git
 cd SethBot-MD
+```
 
-Install Dependencies
+Install Packages
 
+```bash
 npm install
+```
 
 Start Bot
 
+```bash
 node index.js
+```
 
 ---
 
-Pairing Code Login
+🔗 Pairing Code Login
 
+```bash
 node index.js --pairing-code
+```
 
-Enter your WhatsApp number when prompted.
+Then:
 
-Then open:
-
-Settings → Linked Devices → Link a Device
-
-and enter the pairing code.
+WhatsApp → Settings → Linked Devices → Link a Device
 
 ---
 
-VPS Deployment
+🖥 VPS Deployment
 
-Start with PM2
-
+```bash
+npm install
 pm2 start index.js --name seth-bot
-
-Save PM2
-
 pm2 save
-
-Enable Startup
-
 pm2 startup
+```
 
 ---
 
-Multi-Customer Deployment
+☁️ Render Deployment
 
-Create customer folders:
+Build Command:
 
+```
+npm install
+```
+
+Start Command:
+
+```
+node index.js
+```
+
+Environment Variables:
+
+```env
+OWNER_NUMBER=254700000000
+```
+
+---
+
+🚂 Railway Deployment
+
+Environment Variables:
+
+```env
+OWNER_NUMBER=254700000000
+```
+
+---
+
+🔥 Heroku Deployment
+
+Create App:
+
+```bash
+heroku create your-app-name
+```
+
+Set Variables:
+
+```bash
+heroku config:set OWNER_NUMBER=254700000000
+```
+
+Deploy:
+
+```bash
+git push heroku main
+```
+
+---
+
+🖥 Oracle VPS Deployment
+
+Install Node:
+
+```bash
+sudo dnf install nodejs -y
+```
+
+Clone:
+
+```bash
+git clone https://github.com/seth-16-one/SethBot-MD.git
+cd SethBot-MD
+```
+
+Install:
+
+```bash
+npm install
+```
+
+Pair:
+
+```bash
+node index.js --pairing-code
+```
+
+Production:
+
+```bash
+pm2 start index.js --name seth-bot
+pm2 save
+```
+
+---
+
+👥 Multi-Customer Setup
+
+Create folders:
+
+```bash
 mkdir -p /opt/whatsapp-bots/customers/customer1/data
 mkdir -p /opt/whatsapp-bots/customers/customer1/session
+```
 
-Copy default data:
+Copy data:
 
+```bash
 cp -a data/. /opt/whatsapp-bots/customers/customer1/data/
+```
 
 Run customer:
 
-DATA_DIR=/opt/whatsapp-bots/customers/customer1/data \
-SESSION_DIR=/opt/whatsapp-bots/customers/customer1/session \
-OWNER_NUMBER=254700000000 \
+```bash
+DATA_DIR=/opt/whatsapp-bots/customers/customer1/data 
+SESSION_DIR=/opt/whatsapp-bots/customers/customer1/session 
+OWNER_NUMBER=254700000000 
 pm2 start index.js --name customer1-bot
+```
 
 ---
 
-Environment Variables
+⚙ Environment Variables
 
-Supported Variables:
-
+```env
 OWNER_NUMBER=254700000000
 DATA_DIR=./data
 SESSION_DIR=./session
 PORT=3000
+```
 
 ---
 
-Render Deployment
+🔄 Updating
 
-1. Fork repository
-2. Create a Web Service
-3. Connect GitHub repository
-
-Build Command:
-
-npm install
-
-Start Command:
-
-node index.js
-
-Environment Variables:
-
-OWNER_NUMBER=254700000000
-
----
-
-Heroku Deployment
-
-Install Heroku CLI:
-
-heroku login
-
-Create App:
-
-heroku create your-app-name
-
-Set Environment Variables:
-
-heroku config:set OWNER_NUMBER=254700000000
-
-Deploy:
-
-git push heroku main
-
-View Logs:
-
-heroku logs --tail
-
----
-
-Railway Deployment
-
-1. Create Railway Project
-2. Connect GitHub Repository
-3. Deploy Automatically
-
-Environment Variables:
-
-OWNER_NUMBER=254700000000
-
----
-
-Koyeb Deployment
-
-1. Create Service
-2. Connect Repository
-3. Deploy
-
-Environment Variables:
-
-OWNER_NUMBER=254700000000
-
----
-
-Oracle VPS Deployment
-
-Install Node.js:
-
-sudo dnf install nodejs -y
-
-Clone Repository:
-
-git clone https://github.com/seth-16-one/SethBot-MD.git
-
-Install Dependencies:
-
-npm install
-
-Run Bot:
-
-node index.js --pairing-code
-
-Production:
-
-pm2 start index.js --name seth-bot
-pm2 save
-
----
-
-Updating
-
+```bash
 git pull
 npm install
 pm2 restart all
+```
 
 ---
 
-Support
+👨‍💻 Developer
 
-Developer: Seth Tech
+Seth Tech
 
 GitHub:
 https://github.com/seth-16-one
 
+Pairing Website:
+https://knight-bot-paircode.onrender.com
+
 ---
 
-Disclaimer
+⚠ Disclaimer
 
-This project is intended for educational purposes. Users are responsible for complying with WhatsApp Terms of Service and all applicable laws.
+This project is for educational purposes only. Users are responsible for complying with WhatsApp Terms of Service and applicable laws.
+
+<div align="center">⚡ Built With Passion By Seth Tech ⚡
+
+</div>
