@@ -1,8 +1,11 @@
-<div align="center"><img src="https://raw.githubusercontent.com/seth-16-one/SethBot-MD/main/assets/bot_image.jpg" width="280"/>⚡ SETHBOT-MD ⚡
+<div align="center">
+<img src="https://raw.githubusercontent.com/seth-16-one/SethBot-MD/main/assets/bot_image.jpg" width="280"/>
 
-Powerful WhatsApp Multi-Device Bot
-
-<img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&size=22&duration=2500&pause=1000&color=39FF14&center=true&vCenter=true&width=800&lines=WhatsApp+Multi+Device+Bot;Pairing+Code+Support;Oracle+VPS+Ready;Multi+Customer+Architecture;PM2+Ready;Built+By+Seth+Tech" /><br><a href="https://knight-bot-paircode.onrender.com">
+### Powerful WhatsApp Multi-Device Bot
+ src="https://readme-typing-svg.herokuapp.com?font=Orbitron&size=22&duration=2500&pause=1000&color=39FF14&center=true&vCenter=true&width=800&lines=WhatsApp+Multi+Device+Bot;Pairing+Code+Support;Oracle+VPS+Ready;Multi+Customer+Architecture;PM2+Ready;Built+By+Seth+Tech" />
+</div>
+<br>
+<a href="https://knight-bot-paircode.onrender.com">
 <img src="https://img.shields.io/badge/PAIRING-WEBSITE-25D366?style=for-the-badge&logo=whatsapp&logoColor=white">
 </a><a href="https://github.com/seth-16-one/SethBot-MD">
 <img src="https://img.shields.io/badge/GITHUB-REPOSITORY-black?style=for-the-badge&logo=github">
@@ -46,11 +49,47 @@ Downloaders| ✅
 Games| ✅
 Group Management| ✅
 Multi Customer Support| ✅
+----
 
----
+# 📋 Command Categories
 
-⚡ Quick Installation
+```text
+General Commands
+Admin Commands
+Owner Commands
+AI Commands
+Downloader Commands
+Fun Commands
+Image Commands
+Game Commands
+Group Commands
+```
 
+Use:
+.help
+or
+.menu
+
+----
+
+# 💬 Customer Support
+
+Need a hosted bot?
+
+Contact:
+
+```text
+WhatsApp:
++254717246928
+
+Developer:
+Seth Tech
+```
+
+----
+# ⚡ Quick Installation
+
+```bash
 git clone https://github.com/seth-16-one/SethBot-MD.git
 
 cd SethBot-MD
@@ -58,7 +97,15 @@ cd SethBot-MD
 npm install
 
 node index.js --pairing-code
+```
 
+After pairing:
+
+```bash
+pm2 start index.js --name seth-bot
+
+pm2 save
+```
 ---
 
 🔐 Pairing Code Login
@@ -160,6 +207,27 @@ pm2 monit
 Save:
 
 pm2 save
+
+
+# 🏗 Architecture
+
+```text
+Shared Codebase
+        │
+        ├── Seth
+        ├── Brayo
+        ├── Rankyz
+        ├── Khisa
+        ├── Hannington
+        └── Future Customers
+```
+
+Each customer has:
+
+data/
+session/
+
+stored independently.
 
 ---
 
@@ -264,5 +332,7 @@ Users are responsible for complying with WhatsApp Terms of Service and all appli
 ---
 
 <div align="center">⚡ BUILT WITH ❤️ BY SETH TECH ⚡
+# 📸 Preview
 
+<img src="https://raw.githubusercontent.com/seth-16-one/SethBot-MD/main/assets/bot_image.jpg" width="500"/>
 <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&size=18&duration=2500&pause=1000&color=39FF14&center=true&vCenter=true&width=500&lines=Thank+You+For+Using+SethBot-MD;Fast+•+Secure+•+Powerful;WhatsApp+Automation+Made+Easy" /></div>
