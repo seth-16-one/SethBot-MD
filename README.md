@@ -1,50 +1,37 @@
-SethBot-MD
-
 <div align="center"><img src="https://raw.githubusercontent.com/seth-16-one/SethBot-MD/main/assets/bot_image.jpg" width="280"/>⚡ SETHBOT-MD ⚡
 
 Powerful WhatsApp Multi-Device Bot
 
-<p align="center">
-<img src="https://img.shields.io/github/stars/seth-16-one/SethBot-MD?style=for-the-badge">
-<img src="https://img.shields.io/github/forks/seth-16-one/SethBot-MD?style=for-the-badge">
-<img src="https://img.shields.io/github/license/seth-16-one/SethBot-MD?style=for-the-badge">
-</p><p align="center">
-<img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&size=24&duration=3000&pause=1000&center=true&vCenter=true&width=850&lines=WhatsApp+Multi+Device+Bot;Pairing+Code+Support;Oracle+VPS+Ready;PM2+Ready;Multi+Customer+Architecture;Built+with+Node.js+and+Baileys" />
-</p><p align="center">
-<a href="https://knight-bot-paircode.onrender.com">
-<img src="https://img.shields.io/badge/PAIR-NOW-25D366?style=for-the-badge&logo=whatsapp&logoColor=white">
+<img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&size=22&duration=2500&pause=1000&color=39FF14&center=true&vCenter=true&width=800&lines=WhatsApp+Multi+Device+Bot;Pairing+Code+Support;Oracle+VPS+Ready;Multi+Customer+Architecture;PM2+Ready;Built+By+Seth+Tech" /><br><a href="https://knight-bot-paircode.onrender.com">
+<img src="https://img.shields.io/badge/PAIRING-WEBSITE-25D366?style=for-the-badge&logo=whatsapp&logoColor=white">
 </a><a href="https://github.com/seth-16-one/SethBot-MD">
 <img src="https://img.shields.io/badge/GITHUB-REPOSITORY-black?style=for-the-badge&logo=github">
-</a>
-</p></div>---
+</a><br><br>
+
+<img src="https://img.shields.io/badge/Node.js-20+-green?style=for-the-badge&logo=node.js">
+<img src="https://img.shields.io/badge/Baileys-Latest-blue?style=for-the-badge">
+<img src="https://img.shields.io/badge/Platform-WhatsApp-25D366?style=for-the-badge&logo=whatsapp"></div>---
 
 🚀 Overview
 
-SethBot-MD is a modern WhatsApp Multi-Device bot built with Baileys and Node.js.
+SethBot-MD is a modern WhatsApp Multi-Device Bot built with Baileys and Node.js.
 
-The bot supports:
+Designed for:
 
-- Pairing Code Login
-- WhatsApp Multi Device
-- AI Commands
-- Group Management
-- Media Downloaders
-- Auto Status Features
-- Anti Delete
-- Anti Link
-- Anti Badword
-- PM Blocker
-- Multi-Customer Deployment
-- Oracle VPS Hosting
-- PM2 Process Management
+- Individual users
+- Businesses
+- Communities
+- Multi-customer hosting
+- VPS deployments
+- WhatsApp automation
 
 ---
 
 ✨ Features
 
-Feature| Supported
+Feature| Status
 Pairing Code Login| ✅
-Multi Device| ✅
+WhatsApp Multi Device| ✅
 Auto Read| ✅
 Auto Typing| ✅
 Auto Status View| ✅
@@ -56,164 +43,78 @@ PM Blocker| ✅
 Anti Call| ✅
 AI Commands| ✅
 Downloaders| ✅
-Stickers| ✅
 Games| ✅
 Group Management| ✅
-VPS Hosting| ✅
 Multi Customer Support| ✅
 
 ---
 
-🔗 Pairing Website
-
-Generate pairing codes instantly:
-
-https://knight-bot-paircode.onrender.com
-
----
-
-📦 Installation
-
-Clone Repository
+⚡ Quick Installation
 
 git clone https://github.com/seth-16-one/SethBot-MD.git
-cd SethBot-MD
 
-Install Dependencies
+cd SethBot-MD
 
 npm install
 
-Start Bot
-
-node index.js
+node index.js --pairing-code
 
 ---
 
 🔐 Pairing Code Login
 
-Run:
+Generate a pairing code:
 
 node index.js --pairing-code
 
-Enter your WhatsApp number without the plus sign.
+Then on WhatsApp:
 
-Example:
+Settings
+↓
+Linked Devices
+↓
+Link a Device
+↓
+Enter Pairing Code
 
-254712345678
+Pairing Website:
 
-Open WhatsApp:
-
-Settings → Linked Devices → Link a Device
-
-Enter the generated pairing code.
+https://knight-bot-paircode.onrender.com
 
 ---
 
 🖥 Oracle VPS Deployment
 
-Install Node.js:
+<details>
+<summary>Click To Expand</summary>sudo dnf install git -y
 
 sudo dnf install nodejs -y
 
-Clone Repository:
-
 git clone https://github.com/seth-16-one/SethBot-MD.git
+
 cd SethBot-MD
 
-Install packages:
-
 npm install
-
-Pair account:
 
 node index.js --pairing-code
 
-Start with PM2:
+Production:
 
 pm2 start index.js --name seth-bot
 
-Save PM2:
-
 pm2 save
-
-Enable startup:
 
 pm2 startup
 
----
+</details>---
 
-☁️ Render Deployment
+👥 Multi-Customer Hosting
 
-Build Command:
-
-npm install
-
-Start Command:
-
-node index.js
-
-Environment Variables:
-
-OWNER_NUMBER=254700000000
-
----
-
-🚂 Railway Deployment
-
-Environment Variables:
-
-OWNER_NUMBER=254700000000
-
-Deploy directly from GitHub repository.
-
----
-
-🔥 Heroku Deployment
-
-Install Heroku CLI.
-
-Login:
-
-heroku login
-
-Create App:
-
-heroku create your-app-name
-
-Set Variables:
-
-heroku config:set OWNER_NUMBER=254700000000
-
-Deploy:
-
-git push heroku main
-
-Logs:
-
-heroku logs --tail
-
----
-
-🚀 Koyeb Deployment
-
-1. Create Service
-2. Connect GitHub Repository
-3. Add Environment Variables
-4. Deploy
-
-Environment Variables:
-
-OWNER_NUMBER=254700000000
-
----
-
-👥 Multi-Customer Deployment
-
-SethBot-MD supports multiple customers using a single shared codebase.
-
-Create Customer
+<details>
+<summary>Click To Expand</summary>Create customer folders:
 
 mkdir -p /opt/whatsapp-bots/customers/customer1/data
+
 mkdir -p /opt/whatsapp-bots/customers/customer1/session
 
 Copy default data:
@@ -227,17 +128,7 @@ SESSION_DIR=/opt/whatsapp-bots/customers/customer1/session \
 OWNER_NUMBER=254700000000 \
 pm2 start index.js --name customer1-bot
 
-Each customer gets:
-
-- Independent Session
-- Independent Settings
-- Independent Owner
-- Independent Auto Status
-- Independent PM Blocker
-- Independent Anti Delete
-- Independent Auto Read
-
----
+</details>---
 
 ⚙ Environment Variables
 
@@ -258,7 +149,7 @@ Restart:
 
 pm2 restart seth-bot
 
-View Logs:
+Logs:
 
 pm2 logs seth-bot
 
@@ -272,34 +163,94 @@ pm2 save
 
 ---
 
+☁ Render Deployment
+
+<details>
+<summary>Click To Expand</summary>Build Command:
+
+npm install
+
+Start Command:
+
+node index.js
+
+Environment Variables:
+
+OWNER_NUMBER=254700000000
+
+</details>---
+
+🚂 Railway Deployment
+
+<details>
+<summary>Click To Expand</summary>Connect Repository
+
+Deploy Automatically
+
+Environment Variables:
+
+OWNER_NUMBER=254700000000
+
+</details>---
+
+🟣 Heroku Deployment
+
+<details>
+<summary>Click To Expand</summary>Install Heroku CLI:
+
+heroku login
+
+Create App:
+
+heroku create your-app-name
+
+Set Environment Variables:
+
+heroku config:set OWNER_NUMBER=254700000000
+
+Deploy:
+
+git push heroku main
+
+Logs:
+
+heroku logs --tail
+
+</details>---
+
+☁ Koyeb Deployment
+
+<details>
+<summary>Click To Expand</summary>Connect Repository
+
+Deploy Service
+
+Add Variables:
+
+OWNER_NUMBER=254700000000
+
+</details>---
+
 🔄 Updating
 
 git pull
+
 npm install
+
 pm2 restart all
 
 ---
 
-🤝 Contributing
+📞 Support
 
-Contributions are welcome.
-
-1. Fork Repository
-2. Create Branch
-3. Make Changes
-4. Commit Changes
-5. Submit Pull Request
-
----
-
-👨‍💻 Developer
-
-Seth Tech
+Developer: Seth Tech
 
 GitHub:
+
 https://github.com/seth-16-one
 
 Pairing Website:
+
 https://knight-bot-paircode.onrender.com
 
 ---
@@ -308,12 +259,10 @@ https://knight-bot-paircode.onrender.com
 
 This project is intended for educational purposes only.
 
-Users are responsible for complying with WhatsApp Terms of Service and local laws.
-
-The developer assumes no responsibility for misuse of this software.
+Users are responsible for complying with WhatsApp Terms of Service and all applicable laws.
 
 ---
 
-<div align="center">⚡ Built with ❤️ by Seth Tech ⚡
+<div align="center">⚡ BUILT WITH ❤️ BY SETH TECH ⚡
 
-</div>
+<img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&size=18&duration=2500&pause=1000&color=39FF14&center=true&vCenter=true&width=500&lines=Thank+You+For+Using+SethBot-MD;Fast+•+Secure+•+Powerful;WhatsApp+Automation+Made+Easy" /></div>
