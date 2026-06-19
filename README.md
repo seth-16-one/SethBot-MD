@@ -1,5 +1,5 @@
 
-<div align="center">" <img src="https://raw.githubusercontent.com/seth-16-one/SethBot-MD/main/assets/bot-image.jpg" width="250"/>⚡ SETHBOT-MD ⚡
+<div align="center">" <img src="https://raw.githubusercontent.com/seth-16-one/SethBot-MD/main/assets/bot_image.jpg" width="250"/>⚡ SETHBOT-MD ⚡
 
 Powerful WhatsApp Multi-Device Bot
 
