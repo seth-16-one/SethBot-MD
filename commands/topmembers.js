@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const dataFilePath = path.join(__dirname, '..', 'data', 'messageCount.json');
+const DATA_DIR = process.env.DATA_DIR || './data';
+const dataFilePath = path.join(DATA_DIR, 'messageCount.json');
 
 function loadMessageCounts() {
     if (fs.existsSync(dataFilePath)) {

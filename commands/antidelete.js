@@ -5,7 +5,8 @@ const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 const { writeFile } = require('fs/promises');
 
 const messageStore = new Map();
-const CONFIG_PATH = path.join(__dirname, '../data/antidelete.json');
+const DATA_DIR = process.env.DATA_DIR || './data';
+const CONFIG_PATH = path.join(DATA_DIR, 'antidelete.json');
 const TEMP_MEDIA_DIR = path.join(__dirname, '../tmp');
 
 // Ensure tmp dir exists

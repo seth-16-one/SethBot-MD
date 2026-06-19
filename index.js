@@ -71,7 +71,11 @@ setInterval(() => {
 }, 30_000) // check every 30 seconds
 
 let phoneNumber = process.env.OWNER_NUMBER || "254717246928"
-let owner = process.env.OWNER_NUMBER || JSON.parse(fs.readFileSync('./data/owner.json'))
+const DATA_DIR = process.env.DATA_DIR || './data';
+
+let owner =
+  process.env.OWNER_NUMBER ||
+  JSON.parse(fs.readFileSync(`${DATA_DIR}/owner.json`));
 
 global.botname = "SETH BOT"
 global.themeemoji = "•"

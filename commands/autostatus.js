@@ -13,7 +13,8 @@ const channelInfo = {
 };
 
 // Path to store auto status configuration
-const configPath = path.join(__dirname, '../data/autoStatus.json');
+const DATA_DIR = process.env.DATA_DIR || './data';
+const configPath = path.join(DATA_DIR, 'autoStatus.json');
 
 // Initialize config file if it doesn't exist
 if (!fs.existsSync(configPath)) {

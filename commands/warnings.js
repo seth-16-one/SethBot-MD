@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const warningsFilePath = path.join(__dirname, '../data/warnings.json');
+const DATA_DIR = process.env.DATA_DIR || './data';
+const warningsFilePath = path.join(DATA_DIR, 'warnings.json');
 
 function loadWarnings() {
     if (!fs.existsSync(warningsFilePath)) {

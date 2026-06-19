@@ -8,7 +8,8 @@ const path = require('path');
 const isOwnerOrSudo = require('../lib/isOwner');
 
 // Path to store the configuration
-const configPath = path.join(__dirname, '..', 'data', 'autotyping.json');
+const DATA_DIR = process.env.DATA_DIR || './data';
+const configPath = path.join(DATA_DIR, 'autotyping.json');
 
 // Initialize configuration file if it doesn't exist
 function initConfig() {
