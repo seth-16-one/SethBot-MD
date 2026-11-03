@@ -5,9 +5,11 @@ const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 const { writeFile } = require('fs/promises');
 
 const messageStore = new Map();
-const DATA_DIR = process.env.DATA_DIR || './data';
+const { DATA_DIR, TMP_DIR } = require('../lib/paths');
 const CONFIG_PATH = path.join(DATA_DIR, 'antidelete.json');
-const TEMP_MEDIA_DIR = path.join(__dirname, '../tmp');
+// Anti-delete media is cached in this customer's TMP_DIR (TMP_DIR env var,
+// default ./tmp) so media can never overlap between customers.
+const TEMP_MEDIA_DIR = TMP_DIR;
 
 // Ensure tmp dir exists
 if (!fs.existsSync(TEMP_MEDIA_DIR)) {

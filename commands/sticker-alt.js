@@ -1,6 +1,8 @@
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 const { exec } = require('child_process');
 const fs = require('fs');
+const path = require('path');
+const { TEMP_DIR } = require('../lib/paths');
 
 async function stickerCommand(sock, chatId, message) {
     try {
@@ -22,12 +24,12 @@ async function stickerCommand(sock, chatId, message) {
             buffer = Buffer.concat([buffer, chunk]);
         }
 
-        const tempInput = `./temp/temp_${Date.now()}.${type === 'imageMessage' ? 'jpg' : 'mp4'}`;
-        const tempOutput = `./temp/sticker_${Date.now()}.webp`;
+        const tempInput = path.join(TEMP_DIR, `temp_${Date.now()}.${type === 'imageMessage' ? 'jpg' : 'mp4'}`);
+        const tempOutput = path.join(TEMP_DIR, `sticker_${Date.now()}.webp`);
 
         // Create temp directory if it doesn't exist
-        if (!fs.existsSync('./temp')) {
-            fs.mkdirSync('./temp', { recursive: true });
+        if (!fs.existsSync(TEMP_DIR)) {
+            fs.mkdirSync(TEMP_DIR, { recursive: true });
         }
 
         fs.writeFileSync(tempInput, buffer);

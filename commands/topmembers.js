@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const { DATA_DIR } = require('../lib/paths');
 
-const DATA_DIR = process.env.DATA_DIR || './data';
 const dataFilePath = path.join(DATA_DIR, 'messageCount.json');
 
 function loadMessageCounts() {

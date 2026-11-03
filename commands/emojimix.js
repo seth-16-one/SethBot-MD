@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const fs = require('fs');
 const { exec } = require('child_process');
 const path = require('path');
+const { TMP_DIR } = require('../lib/paths');
 
 async function emojimixCommand(sock, chatId, msg) {
     try {
@@ -42,7 +43,7 @@ async function emojimixCommand(sock, chatId, msg) {
         const imageUrl = data.results[0].url;
 
         // Create temp directory if it doesn't exist
-        const tmpDir = path.join(process.cwd(), 'tmp');
+        const tmpDir = TMP_DIR;
         if (!fs.existsSync(tmpDir)) {
             fs.mkdirSync(tmpDir, { recursive: true });
         }

@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const isOwnerOrSudo = require('../lib/isOwner');
+const { DATA_DIR } = require('../lib/paths');
 
 const channelInfo = {
     contextInfo: {
@@ -13,7 +14,6 @@ const channelInfo = {
 };
 
 // Path to store auto status configuration
-const DATA_DIR = process.env.DATA_DIR || './data';
 const configPath = path.join(DATA_DIR, 'autoStatus.json');
 
 // Initialize config file if it doesn't exist

@@ -6,6 +6,7 @@ const path = require('path');
 const sharp = require('sharp');
 const webp = require('node-webpmux');
 const crypto = require('crypto');
+const { TMP_DIR } = require('../lib/paths');
 const { exec } = require('child_process');
 const settings = require('../settings');
 
@@ -67,7 +68,7 @@ async function stickerTelegramCommand(sock, chatId, msg) {
             });
 
             // Create temp directory if it doesn't exist
-            const tmpDir = path.join(process.cwd(), 'tmp');
+            const tmpDir = TMP_DIR;
             if (!fs.existsSync(tmpDir)) {
                 fs.mkdirSync(tmpDir, { recursive: true });
             }

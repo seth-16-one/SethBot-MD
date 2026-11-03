@@ -2,6 +2,7 @@ const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 const fs = require('fs');
 const path = require('path');
 const { UploadFileUgu, TelegraPh } = require('../lib/uploader');
+const { TEMP_DIR } = require('../lib/paths');
 
 async function getMediaBufferAndExt(message) {
     const m = message.message || {};
@@ -58,7 +59,7 @@ async function urlCommand(sock, chatId, message) {
             return;
         }
 
-        const tempDir = path.join(__dirname, '../temp');
+        const tempDir = TEMP_DIR;
         if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
         const tempPath = path.join(tempDir, `${Date.now()}${media.ext}`);
         fs.writeFileSync(tempPath, media.buffer);

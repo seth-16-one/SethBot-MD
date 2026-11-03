@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const isOwnerOrSudo = require('../lib/isOwner');
+const { TMP_DIR, TEMP_DIR } = require('../lib/paths');
 
 // Function to clear a single directory
 function clearDirectory(dirPath) {
@@ -32,10 +33,12 @@ function clearDirectory(dirPath) {
     }
 }
 
-// Function to clear both tmp and temp directories
+// Function to clear both tmp and temp directories for THIS customer only.
+// TMP_DIR / TEMP_DIR are resolved per-customer from lib/paths.js (env vars),
+// so one customer's cleanup can never delete another customer's files.
 async function clearTmpDirectory() {
-    const tmpDir = path.join(process.cwd(), 'tmp');
-    const tempDir = path.join(process.cwd(), 'temp');
+    const tmpDir = TMP_DIR;
+    const tempDir = TEMP_DIR;
     const results = [];
     results.push(clearDirectory(tmpDir));
     results.push(clearDirectory(tempDir));

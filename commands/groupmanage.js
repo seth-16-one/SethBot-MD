@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
+const { TMP_DIR } = require('../lib/paths');
 
 async function ensureGroupAndAdmin(sock, chatId, senderId) {
     const isGroup = chatId.endsWith('@g.us');
@@ -65,7 +66,7 @@ async function setGroupPhoto(sock, chatId, senderId, message) {
         return;
     }
     try {
-        const tmpDir = path.join(process.cwd(), 'tmp');
+        const tmpDir = TMP_DIR;
         if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
         const stream = await downloadContentFromMessage(imageMessage, 'image');

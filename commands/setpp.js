@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 const isOwnerOrSudo = require('../lib/isOwner');
+const { TMP_DIR } = require('../lib/paths');
 
 async function setProfilePicture(sock, chatId, msg) {
     try {
@@ -34,7 +35,7 @@ async function setProfilePicture(sock, chatId, msg) {
         }
 
         // Create tmp directory if it doesn't exist
-        const tmpDir = path.join(process.cwd(), 'tmp');
+        const tmpDir = TMP_DIR;
         if (!fs.existsSync(tmpDir)) {
             fs.mkdirSync(tmpDir, { recursive: true });
         }

@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { DATA_DIR } = require('../lib/paths');
 
 function readJsonSafe(path, fallback) {
     try {
@@ -22,7 +23,7 @@ async function settingsCommand(sock, chatId, message) {
         }
 
         const isGroup = chatId.endsWith('@g.us');
-        const dataDir = process.env.DATA_DIR || './data';
+        const dataDir = DATA_DIR;
 
         const mode = readJsonSafe(`${dataDir}/messageCount.json`, { isPublic: true });
         const autoStatus = readJsonSafe(`${dataDir}/autoStatus.json`, { enabled: false });
