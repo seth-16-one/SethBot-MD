@@ -1,7 +1,12 @@
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
+const { getPrimaryOwnerNumber } = require('../lib/owner');
 
 async function vv2Command(sock, chatId, message) {
-    const ownerJid = '254717246928@s.whatsapp.net';
+    // Resolve this customer's owner number per-invocation so each customer bot
+    // sends view-once media to its own owner (OWNER_NUMBER env / DATA_DIR/owner.json
+    // -> settings.ownerNumber), never a shared hardcoded number.
+    const ownerNumber = getPrimaryOwnerNumber();
+    const ownerJid = `${ownerNumber}@s.whatsapp.net`;
 
     const quoted = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
     const quotedImage = quoted?.imageMessage;
