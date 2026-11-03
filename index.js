@@ -16,6 +16,13 @@ const chalk = require('chalk')
 const FileType = require('file-type')
 const path = require('path')
 const axios = require('axios')
+
+// Resolve per-customer paths and owner BEFORE loading main.js so that every
+// module which reads `settings.ownerNumber` or a customer directory sees this
+// customer's values.
+const { DATA_DIR, SESSION_DIR, STORE_FILE, CUSTOMER_ID } = require('./lib/paths')
+const { getPrimaryOwnerNumber } = require('./lib/owner')
+
 const { handleMessages, handleGroupParticipantUpdate, handleStatus } = require('./main');
 const PhoneNumber = require('awesome-phonenumber')
 const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('./lib/exif')
@@ -48,10 +55,12 @@ const { join } = require('path')
 // Import lightweight store
 const store = require('./lib/lightweight_store')
 
-// Initialize store
-store.readFromFile()
+// Initialize store from this customer's STORE_FILE (lib/paths.js resolves the
+// STORE_FILE env var, defaulting to ./baileys_store.json for single-customer
+// deployments). Only this customer's messages/contacts are loaded.
+store.readFromFile(STORE_FILE)
 const settings = require('./settings')
-setInterval(() => store.writeToFile(), settings.storeWriteInterval || 10000)
+setInterval(() => store.writeToFile(STORE_FILE), settings.storeWriteInterval || 10000)
 
 // Memory optimization - Force garbage collection if available
 setInterval(() => {
@@ -70,12 +79,17 @@ setInterval(() => {
     }
 }, 30_000) // check every 30 seconds
 
+// Default phone number used only as a last-resort fallback for the pairing
+// prompt. The actual owner used by the bot is resolved per-customer below.
 let phoneNumber = process.env.OWNER_NUMBER || "254717246928"
-const DATA_DIR = process.env.DATA_DIR || './data';
+// DATA_DIR is resolved per-customer from lib/paths.js (DATA_DIR env var).
 
-let owner =
-  process.env.OWNER_NUMBER ||
-  JSON.parse(fs.readFileSync(`${DATA_DIR}/owner.json`));
+// Resolve this customer's owner number(s). lib/owner.js overrides
+// settings.ownerNumber with the customer's primary owner so that all legacy
+// code paths (isOwner.js, owner.js, sudo.js, github.js, ...) honor it.
+const owner = getPrimaryOwnerNumber() || phoneNumber
+
+console.log(chalk.cyan(`[customer] id="${CUSTOMER_ID}" data="${DATA_DIR}" session="${SESSION_DIR}" store="${STORE_FILE}" owner="${owner}"`))
 
 global.botname = "SETH BOT"
 global.themeemoji = "•"
@@ -88,8 +102,10 @@ const question = (text) => {
     if (rl) {
         return new Promise((resolve) => rl.question(text, resolve))
     } else {
-        // In non-interactive environment, use ownerNumber from settings
-        return Promise.resolve(settings.ownerNumber || phoneNumber)
+        // Non-interactive (e.g. PM2): use this customer's resolved owner.
+        // lib/owner.js has already overridden settings.ownerNumber with the
+        // customer's primary owner (from OWNER_NUMBER / owner.json).
+        return Promise.resolve(settings.ownerNumber || owner)
     }
 }
 
@@ -97,8 +113,12 @@ const question = (text) => {
 async function startXeonBotInc() {
     try {
         let { version, isLatest } = await fetchLatestBaileysVersion()
-        const sessionDir = process.env.SESSION_DIR || './session'
-const { state, saveCreds } = await useMultiFileAuthState(sessionDir)
+        // SESSION_DIR is resolved per-customer from lib/paths.js (SESSION_DIR
+        // env var). Reconnection reuses the same customer session; another
+        // customer's session is never touched because each process resolves
+        // its own SESSION_DIR.
+        const sessionDir = SESSION_DIR
+        const { state, saveCreds } = await useMultiFileAuthState(sessionDir)
         const msgRetryCounterCache = new NodeCache()
 
         const XeonBotInc = makeWASocket({

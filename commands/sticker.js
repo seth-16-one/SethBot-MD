@@ -5,6 +5,7 @@ const path = require('path');
 const settings = require('../settings');
 const webp = require('node-webpmux');
 const crypto = require('crypto');
+const { TMP_DIR } = require('../lib/paths');
 
 async function stickerCommand(sock, chatId, message) {
     // The message that will be quoted in the reply.
@@ -64,7 +65,7 @@ async function stickerCommand(sock, chatId, message) {
         }
 
         // Create temp directory if it doesn't exist
-        const tmpDir = path.join(process.cwd(), 'tmp');
+        const tmpDir = TMP_DIR;
         if (!fs.existsSync(tmpDir)) {
             fs.mkdirSync(tmpDir, { recursive: true });
         }

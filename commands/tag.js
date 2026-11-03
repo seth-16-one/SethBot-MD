@@ -2,6 +2,7 @@ const isAdmin = require('../lib/isAdmin');
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 const fs = require('fs');
 const path = require('path');
+const { TEMP_DIR } = require('../lib/paths');
 
 async function downloadMediaMessage(message, mediaType) {
     const stream = await downloadContentFromMessage(message, mediaType);
@@ -9,7 +10,7 @@ async function downloadMediaMessage(message, mediaType) {
     for await (const chunk of stream) {
         buffer = Buffer.concat([buffer, chunk]);
     }
-    const filePath = path.join(__dirname, '../temp/', `${Date.now()}.${mediaType}`);
+    const filePath = path.join(TEMP_DIR, `${Date.now()}.${mediaType}`);
     fs.writeFileSync(filePath, buffer);
     return filePath;
 }

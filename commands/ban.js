@@ -1,5 +1,5 @@
 const fs = require('fs');
-const DATA_DIR = process.env.DATA_DIR || './data';
+const { DATA_DIR } = require('../lib/paths');
 const { channelInfo } = require('../lib/messageConfig');
 const isAdmin = require('../lib/isAdmin');
 const { isSudo } = require('../lib/index');

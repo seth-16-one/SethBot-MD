@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
-const DATA_DIR = process.env.DATA_DIR || './data';
+const { DATA_DIR } = require('../lib/paths');
 const MENTION_FILE = path.join(DATA_DIR, 'mention.json');
 function loadState() {
 	try {

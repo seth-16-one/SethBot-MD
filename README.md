@@ -30,6 +30,69 @@ Designed for:
 
 ---
 
+# 🧠 How It Works (Managed VPS / Multi-Customer Hosting)
+
+SethBot-MD is built so that **one shared codebase + one `node_modules` tree
+can host many WhatsApp customers on a single managed VPS** — without
+duplicating the source code or running `npm install` for every customer.
+
+This is the difference between the old, wasteful way and the way SethBot-MD
+works:
+
+```text
+OLD WAY (one copy per customer — wasteful)        SETHBOT WAY (shared codebase)
+┌──────────────────────────────────────┐          ┌──────────────────────────────────────┐
+│ ~/customer1-bot/  (code + modules)   │          │ ~/whatsapp-bots/shared/sethbot/      │
+│ ~/customer2-bot/  (code + modules)   │          │   index.js  main.js  commands/       │
+│ ~/customer3-bot/  (code + modules)   │          │   lib/  node_modules/  package.json  │
+│  × 3 codebases                        │          │   └─ ONE copy of everything          │
+│  × 3 npm installs (≈600 pkgs each)    │          │   └─ ONE npm install                │
+│  × 3 things to update                 │          │   └─ ONE thing to update            │
+└──────────────────────────────────────┘          │                                       │
+                                                  │ ~/whatsapp-bots/customers/           │
+                                                  │   ├── seth/   data session temp tmp   │
+                                                  │   ├── brayo/  data session temp tmp   │
+                                                  │   └── .../    (only DATA, no code)    │
+                                                  └──────────────────────────────────────┘
+```
+
+**How isolation is achieved with a single codebase:**
+
+- Every customer runs as its **own PM2 process** (its own RAM, its own
+  crash isolation, its own restart policy).
+- Each process is told, through **environment variables**, where its own
+  data, session, temp, and message-store files live. There is exactly **one
+  copy of the source code** on disk; each process just points at a different
+  set of customer folders.
+- Per customer, the bot keeps **separate**:
+  - WhatsApp auth session (`SESSION_DIR`) — so logins never mix
+  - Message & contact store (`STORE_FILE`) — so chats never leak
+  - Anti-delete media & sticker temp (`TMP_DIR`, `TEMP_DIR`) — so files never
+    collide
+  - Config, counters, sudo list, `owner.json` (`DATA_DIR`) — so settings and
+    owners are per-customer
+- The **owner** of each bot is resolved per-customer (`OWNER_NUMBER` env →
+  `DATA_DIR/owner.json` → `settings.ownerNumber`), so each customer's owner
+  is the only one who can run owner commands on their bot.
+
+**Why this matters for a managed VPS:**
+
+- **Disk:** one `node_modules` (~hundreds of MB) instead of one per customer.
+  10 customers ≈ 1× the code, not 10×.
+- **Updates:** `git pull && npm install` once in the shared folder updates
+  every customer on the next `pm2 restart all`. No per-customer updates.
+- **RAM:** each customer is its own lightweight Node process, so one
+  customer crashing or being restarted does not affect the others.
+- **Onboarding a new customer:** create 5 empty folders + run one PM2
+  command. No clone, no install, no code copy.
+- **Backward compatible:** set no environment variables and the bot uses the
+  original single-customer defaults (`./data`, `./session`, …), so a normal
+  one-user `node index.js` deployment keeps working exactly as before.
+
+See the **👥 Multi-Customer Hosting** section below for the exact commands.
+
+---
+
 ✨ Features
 
 Feature| Status
@@ -87,7 +150,9 @@ Seth Tech
 ```
 
 ----
-# ⚡ Quick Installation
+# ⚡ Quick Installation (single customer)
+
+For a normal, one-user deployment on your own machine or VPS:
 
 ```bash
 git clone https://github.com/seth-16-one/SethBot-MD.git
@@ -106,6 +171,10 @@ pm2 start index.js --name seth-bot
 
 pm2 save
 ```
+
+> Hosting **many** WhatsApp users on one managed VPS with a single shared
+> codebase (no duplicated code, no per-user `node_modules`)? Skip ahead to
+> **🧠 How It Works** and **👥 Multi-Customer Hosting** below.
 ---
 
 🔐 Pairing Code Login
@@ -155,58 +224,195 @@ pm2 startup
 
 </details>---
 
-👥 Multi-Customer Hosting
+👥 Multi-Customer Hosting (Shared Codebase)
 
 <details>
-<summary>Click To Expand</summary>Create customer folders:
+<summary>Click To Expand</summary>
 
-mkdir -p /opt/whatsapp-bots/customers/customer1/data
+**The managed-VPS model:** one shared codebase + one `node_modules` hosts
+many WhatsApp customers. Each customer is its own PM2 process and writes only
+to its own directories, so sessions, message stores, temp media and configs
+never overlap. No source code is duplicated and no per-customer `npm install`
+is needed. (See the *How It Works* section above for the full rationale.)
 
-mkdir -p /opt/whatsapp-bots/customers/customer1/session
+Recommended layout:
 
-Copy default data:
+```text
+~/whatsapp-bots/
+├── shared/
+│   └── sethbot/              # the single shared codebase + node_modules
+│       ├── index.js
+│       ├── main.js
+│       ├── commands/
+│       ├── lib/
+│       ├── node_modules/
+│       └── package.json
+└── customers/
+    ├── seth/
+    │   ├── data/             # DATA_DIR    (configs, counters, sudo, owner.json)
+    │   ├── session/          # SESSION_DIR (Baileys auth)
+    │   ├── temp/             # TEMP_DIR    (download/transcode scratch)
+    │   ├── tmp/              # TMP_DIR     (sticker/antidelete media cache)
+    │   └── baileys_store.json# STORE_FILE  (message/contact store)
+    └── brayo/
+        ├── data/
+        ├── session/
+        ├── temp/
+        ├── tmp/
+        └── baileys_store.json
+```
 
-cp -a data/. /opt/whatsapp-bots/customers/customer1/data/
+The directories are selected purely through environment variables — no source
+code is duplicated and no per-customer `npm install` is needed.
 
-Run customer:
+Environment variables (all optional; defaults preserve single-customer behavior):
 
-DATA_DIR=/opt/whatsapp-bots/customers/customer1/data \
-SESSION_DIR=/opt/whatsapp-bots/customers/customer1/session \
-OWNER_NUMBER=254700000000 \
-pm2 start index.js --name customer1-bot
+```env
+CUSTOMER_ID=seth
+DATA_DIR=/home/user/whatsapp-bots/customers/seth/data
+SESSION_DIR=/home/user/whatsapp-bots/customers/seth/session
+TEMP_DIR=/home/user/whatsapp-bots/customers/seth/temp
+TMP_DIR=/home/user/whatsapp-bots/customers/seth/tmp
+STORE_FILE=/home/user/whatsapp-bots/customers/seth/baileys_store.json
+OWNER_NUMBER=2547XXXXXXXX
+```
+
+When a variable is omitted the original default (relative to the codebase)
+is used, so a single-customer `node index.js` deployment keeps working
+exactly as before.
+
+### 1. Deploy the shared codebase (once)
+
+```bash
+mkdir -p ~/whatsapp-bots/shared
+cd ~/whatsapp-bots/shared
+git clone https://github.com/seth-16-one/SethBot-MD.git sethbot
+cd sethbot
+npm install
+```
+
+### 2. Create and pair a new customer
+
+```bash
+CUSTOMER=seth
+OWNER=2547XXXXXXXX            # the customer's WhatsApp number, no +
+
+mkdir -p ~/whatsapp-bots/customers/$CUSTOMER/{data,session,temp,tmp}
+
+# (Optional) seed an owner.json so the bot knows the owner before pairing.
+# The bot will never overwrite this file.
+echo "[\"$OWNER\"]" > ~/whatsapp-bots/customers/$CUSTOMER/data/owner.json
+
+cd ~/whatsapp-bots/shared/sethbot
+
+# Pair interactively (prints a pairing code on the terminal):
+CUSTOMER_ID=$CUSTOMER \
+DATA_DIR=~/whatsapp-bots/customers/$CUSTOMER/data \
+SESSION_DIR=~/whatsapp-bots/customers/$CUSTOMER/session \
+TEMP_DIR=~/whatsapp-bots/customers/$CUSTOMER/temp \
+TMP_DIR=~/whatsapp-bots/customers/$CUSTOMER/tmp \
+STORE_FILE=~/whatsapp-bots/customers/$CUSTOMER/baileys_store.json \
+OWNER_NUMBER=$OWNER \
+node index.js --pairing-code
+```
+
+Open WhatsApp → Settings → Linked Devices → Link a Device → enter the code.
+Once linked, stop the process (Ctrl+C) and start it under PM2 (next step).
+
+### 3. Start the customer under PM2
+
+Use the same `$CUSTOMER` variable for every path so the customer's folders
+and PM2 process name always match:
+
+```bash
+CUSTOMER=seth
+OWNER=2547XXXXXXXX
+
+cd ~/whatsapp-bots/shared/sethbot
+
+CUSTOMER_ID=$CUSTOMER \
+DATA_DIR=~/whatsapp-bots/customers/$CUSTOMER/data \
+SESSION_DIR=~/whatsapp-bots/customers/$CUSTOMER/session \
+TEMP_DIR=~/whatsapp-bots/customers/$CUSTOMER/temp \
+TMP_DIR=~/whatsapp-bots/customers/$CUSTOMER/tmp \
+STORE_FILE=~/whatsapp-bots/customers/$CUSTOMER/baileys_store.json \
+OWNER_NUMBER=$OWNER \
+pm2 start index.js --name "$CUSTOMER-bot"
+```
+
+> Tip: store each customer's full command in a small script
+> (`~/whatsapp-bots/start-seth.sh`, `start-brayo.sh`, …) so you can
+> re-create the PM2 process in one line if needed. Or use the
+> `ecosystem.example.cjs` file in the repo to declare all customers in one
+> PM2 config (`pm2 start ecosystem.config.cjs`).
+
+Repeat steps 2–3 for every customer (brayo, customer3, ...), giving each a
+unique `CUSTOMER_ID`, its own directories and its own PM2 `--name`.
+
+### 4. Persist PM2 across reboots (no sudo needed for the user's own services)
+
+```bash
+pm2 save
+pm2 startup            # run the one-time command PM2 prints, then:
+# (PM2 prints a single command to copy-paste; that line does need sudo once
+#  to install the systemd unit, but running the bots themselves never does.)
+```
+
+### 5. Update the shared codebase (affects all customers on next restart)
+
+```bash
+cd ~/whatsapp-bots/shared/sethbot
+git pull
+npm install            # only if dependencies changed
+pm2 restart all        # or restart customers individually
+```
 
 </details>---
 
 ⚙ Environment Variables
 
-OWNER_NUMBER=254700000000
-DATA_DIR=./data
-SESSION_DIR=./session
-PORT=3000
+| Variable | Purpose | Default (single-customer) |
+|---|---|---|
+| `CUSTOMER_ID` | Label used in startup logs | `default` |
+| `DATA_DIR` | Customer config/counters/`owner.json` | `./data` |
+| `SESSION_DIR` | Baileys auth/session folder | `./session` |
+| `TEMP_DIR` | Download/transcode scratch | `./temp` |
+| `TMP_DIR` | Sticker/antidelete media cache | `./tmp` |
+| `STORE_FILE` | Baileys message/contact store | `./baileys_store.json` |
+| `OWNER_NUMBER` | Customer's owner number(s) (comma-separated allowed) | `settings.ownerNumber` / `DATA_DIR/owner.json` |
+
+Owner resolution priority: `OWNER_NUMBER` env → `DATA_DIR/owner.json` →
+`settings.ownerNumber`. The bot only ever *reads* `owner.json`; it never
+creates or overwrites it.
 
 ---
 
 📊 PM2 Commands
 
-Start:
+Single customer (legacy):
 
-pm2 start index.js --name seth-bot
+Start: `pm2 start index.js --name seth-bot`
+Restart: `pm2 restart seth-bot`
+Logs: `pm2 logs seth-bot`
+Monitor: `pm2 monit`
+Save: `pm2 save`
 
-Restart:
+Multi-customer (one PM2 process per customer, shared codebase):
 
-pm2 restart seth-bot
+Start one customer (see the Multi-Customer Hosting section for the full
+command with all env vars): `pm2 start index.js --name seth-bot`
 
-Logs:
+Stop one customer: `pm2 stop seth-bot`
+Restart one customer: `pm2 restart seth-bot`
+Restart all customers: `pm2 restart all`
+List all customers: `pm2 list`
+Logs for one customer: `pm2 logs seth-bot`
+Live monitor (all customers): `pm2 monit`
+Save the process list (survives reboots): `pm2 save`
 
-pm2 logs seth-bot
-
-Monitor:
-
-pm2 monit
-
-Save:
-
-pm2 save
+Note: never start two PM2 processes with the same `SESSION_DIR` — that would
+make two processes share one WhatsApp session. Each customer must point at its
+own `SESSION_DIR`.
 
 
 # 🏗 Architecture
@@ -301,11 +507,25 @@ OWNER_NUMBER=254700000000
 
 🔄 Updating
 
+Single customer:
+
+```bash
 git pull
-
-npm install
-
+npm install            # only if dependencies changed
 pm2 restart all
+```
+
+Shared-codebase (multi-customer) — update once, every customer picks it up on
+the next restart:
+
+```bash
+cd ~/whatsapp-bots/shared/sethbot
+git pull
+npm install            # only if dependencies changed
+pm2 restart all        # restarts every customer process at once
+```
+
+No per-customer clone, install, or copy is ever needed.
 
 ---
 

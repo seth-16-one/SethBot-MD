@@ -1,6 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const { TMP_DIR } = require('../lib/paths');
 
 async function facebookCommand(sock, chatId, message) {
     try {
@@ -180,7 +181,7 @@ async function facebookCommand(sock, chatId, message) {
             // Fallback to buffer method
             try {
                 // Create temp directory if it doesn't exist
-                const tmpDir = path.join(process.cwd(), 'tmp');
+                const tmpDir = TMP_DIR;
                 if (!fs.existsSync(tmpDir)) {
                     fs.mkdirSync(tmpDir, { recursive: true });
                 }

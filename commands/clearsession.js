@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const isOwnerOrSudo = require('../lib/isOwner');
+const { SESSION_DIR } = require('../lib/paths');
 
 const channelInfo = {
     contextInfo: {
@@ -26,8 +27,9 @@ async function clearSessionCommand(sock, chatId, msg) {
             return;
         }
 
-        // Define session directory
-        const sessionDir = path.join(__dirname, '../session');
+        // Define session directory — this customer's SESSION_DIR (SESSION_DIR
+        // env var). Never touches another customer's session.
+        const sessionDir = SESSION_DIR;
 
         if (!fs.existsSync(sessionDir)) {
             await sock.sendMessage(chatId, { 

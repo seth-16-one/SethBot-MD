@@ -4,6 +4,7 @@ const path = require('path');
 const https = require('https');
 const settings = require('../settings');
 const isOwnerOrSudo = require('../lib/isOwner');
+const { TMP_DIR } = require('../lib/paths');
 
 function run(cmd) {
     return new Promise((resolve, reject) => {
@@ -131,7 +132,9 @@ async function updateViaZip(sock, chatId, message, zipOverride) {
     if (!zipUrl) {
         throw new Error('No ZIP URL configured. Set settings.updateZipUrl or UPDATE_ZIP_URL env.');
     }
-    const tmpDir = path.join(process.cwd(), 'tmp');
+    // Download into this customer's TMP_DIR so concurrent customer updates don't
+    // clobber each other's update.zip / extraction folders.
+    const tmpDir = TMP_DIR;
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
     const zipPath = path.join(tmpDir, 'update.zip');
     await downloadFile(zipUrl, zipPath);
