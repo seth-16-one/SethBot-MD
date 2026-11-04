@@ -62,7 +62,12 @@ async function pairCommand(sock, chatId, message, q) {
             });
 
             try {
-                const response = await axios.get(`https://knight-bot-paircode.onrender.com/code?number=${number}`);
+                // PAIR_SERVER_URL = the SethBot-MD pairing server (its SESSION_ID is sent to that number's own chat).
+                // Without it the previous public pairing service is used, as before.
+                const pairBase = String(process.env.PAIR_SERVER_URL || '').trim().replace(/\/+$/, '');
+                const response = pairBase
+                    ? await axios.post(`${pairBase}/api/request-code`, { phone: number }, { timeout: 45000 })
+                    : await axios.get(`https://knight-bot-paircode.onrender.com/code?number=${number}`);
                 
                 if (response.data && response.data.code) {
                     const code = response.data.code;
@@ -72,7 +77,9 @@ async function pairCommand(sock, chatId, message, q) {
                     
                     await sleep(5000);
                     await sock.sendMessage(chatId, {
-                        text: `Your pairing code: ${code}`,
+                        text: pairBase
+                            ? `Your pairing code: ${code}\n\nWhatsApp → Linked devices → Link with phone number, then enter the code. Your SESSION_ID will be sent to that number's own WhatsApp chat.`
+                            : `Your pairing code: ${code}`,
                         contextInfo: {
                             forwardingScore: 1,
                             isForwarded: true,
@@ -86,9 +93,10 @@ async function pairCommand(sock, chatId, message, q) {
                 }
             } catch (apiError) {
                 console.error('API Error:', apiError);
+                const serverMessage = apiError.response?.data?.error?.message;
                 const errorMessage = apiError.message === 'Service Unavailable' 
                     ? "Service is currently unavailable. Please try again later."
-                    : "Failed to generate pairing code. Please try again later.";
+                    : (serverMessage || "Failed to generate pairing code. Please try again later.");
                 
                 await sock.sendMessage(chatId, {
                     text: errorMessage,
