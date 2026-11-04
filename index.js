@@ -9,6 +9,7 @@
  * - Baileys Library by @adiwajshing
  * - Pair Code implementation inspired by TechGod143 & DGXEON
  */
+try { require('dotenv').config({ quiet: true }) } catch { /* optional */ }
 require('./settings')
 const { Boom } = require('@hapi/boom')
 const fs = require('fs')
@@ -22,6 +23,9 @@ const axios = require('axios')
 // customer's values.
 const { DATA_DIR, SESSION_DIR, STORE_FILE, CUSTOMER_ID } = require('./lib/paths')
 const { getPrimaryOwnerNumber } = require('./lib/owner')
+// SESSION_ID deployment: SESSION_ID env var or session.txt -> creds.json in SESSION_DIR (see lib/sessionLoader.js)
+const { acquireSession, markDead, readRawSessionId } = require('./lib/sessionLoader')
+const SESSION_FILE = path.join(process.cwd(), 'session.txt')
 
 const { handleMessages, handleGroupParticipantUpdate, handleStatus } = require('./main');
 const PhoneNumber = require('awesome-phonenumber')
@@ -112,6 +116,22 @@ const question = (text) => {
 
 async function startXeonBotInc() {
     try {
+        // Apply SESSION_ID / session.txt BEFORE Baileys reads the auth folder.
+        // With neither present nothing changes: existing folder, QR or pairing code work as before.
+        const sessionLoad = acquireSession(SESSION_DIR, process.env, { sessionFile: SESSION_FILE })
+        if (sessionLoad.status === 'invalid') {
+            console.log(chalk.red(`❌ SESSION_ID problem: ${sessionLoad.message}`))
+            console.log(chalk.yellow('Fix SESSION_ID (or session.txt) and restart. Waiting, not connecting.'))
+            return
+        }
+        if (sessionLoad.status === 'dead') {
+            console.log(chalk.red(`❌ ${sessionLoad.message}`))
+            return
+        }
+        if (sessionLoad.status === 'loaded') {
+            console.log(chalk.green(`🔑 Session loaded from SESSION_ID (${sessionLoad.phone})`))
+        }
+
         let { version, isLatest } = await fetchLatestBaileysVersion()
         // SESSION_DIR is resolved per-customer from lib/paths.js (SESSION_DIR
         // env var). Reconnection reuses the same customer session; another
@@ -305,8 +325,10 @@ async function startXeonBotInc() {
             
             if (statusCode === DisconnectReason.loggedOut || statusCode === 401) {
                 try {
-                    rmSync(sessionDir, { recursive: true, force: true })
-                    console.log(chalk.yellow('Session folder deleted. Please re-authenticate.'))
+                    // Clears the credentials and remembers a SESSION_ID in use as dead, so a restart
+                    // does not retry it in a loop. A new SESSION_ID is needed.
+                    markDead(sessionDir, readRawSessionId(process.env, SESSION_FILE))
+                    console.log(chalk.yellow('Session credentials cleared. Please re-authenticate (new SESSION_ID or pairing).'))
                 } catch (error) {
                     console.error('Error deleting session:', error)
                 }
