@@ -62,8 +62,8 @@ async function clearSessionCommand(sock, chatId, msg) {
 
         // Delete files
         for (const file of files) {
-            if (file === 'creds.json') {
-                // Skip creds.json file
+            if (file === 'creds.json' || file === '.session_hash' || file === '.session_dead') {
+                // Keep the credentials and the SESSION_ID bookkeeping files
                 continue;
             }
             try {
