@@ -415,6 +415,27 @@ make two processes share one WhatsApp session. Each customer must point at its
 own `SESSION_DIR`.
 
 
+# 🔑 SESSION_ID deployment
+
+The bot can start from a **SESSION_ID** instead of a pairing code typed on the server. Pair on the pairing website (**Pair code** or **QR code**), copy the `SETHBOT~...` ID it shows (a copy also arrives in your own WhatsApp chat), then give it to the bot in one of two ways:
+
+```bash
+# 1) environment variable
+SESSION_ID=SETHBOT~eyJ...
+
+# 2) or a file named session.txt next to index.js containing only the ID
+```
+
+How it behaves:
+
+- The ID is applied once; on restart the bot keeps the fresher credentials it has saved since.
+- A **new** SESSION_ID replaces the old credentials.
+- If WhatsApp logs the session out, the bot clears it and refuses that ID on the next restart (no crash loop). Generate a new ID.
+- With no SESSION_ID the bot works as before (existing session folder, QR or pairing code).
+- `PAIR_SERVER_URL` (optional) points the `.pair` command at your pairing server. See `.env.example`.
+
+Keep the SESSION_ID private: it is a login for the WhatsApp account.
+
 # 🏗 Architecture
 
 ```text
