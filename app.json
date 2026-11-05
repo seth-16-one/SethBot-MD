@@ -1,0 +1,29 @@
+{
+  "name": "SethBot-MD",
+  "description": "SethBot-MD WhatsApp Bot — deployable to Heroku and other Node.js hosting panels",
+  "repository": "https://github.com/seth-16-one/SethBot-MD",
+  "keywords": ["whatsapp", "bot", "baileys", "node"],
+  "stack": "heroku-22",
+  "buildpacks": [{ "url": "heroku/nodejs" }],
+  "formation": {
+    "web": { "quantity": 1, "size": "eco" }
+  },
+  "env": {
+    "SESSION_ID": {
+      "description": "Paste your TELMAS~ session ID here (generate it on the SethBot-MD pairing website first)",
+      "required": true
+    },
+    "OWNER_NUMBER": {
+      "description": "Owner's WhatsApp number, with country code, no + or spaces (e.g. 254700000000)",
+      "required": false
+    },
+    "PAIR_SERVER_URL": {
+      "description": "Your SethBot-MD pairing server, used by the .pair command (optional)",
+      "required": false
+    },
+    "PORT": {
+      "description": "Port for the built-in web server (Heroku sets this automatically)",
+      "value": "3000"
+    }
+  }
+}
