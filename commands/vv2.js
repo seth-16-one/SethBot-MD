@@ -1,4 +1,4 @@
-const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
+const { downloadContentFromMessage } = require('baileys');
 const { getPrimaryOwnerNumber } = require('../lib/owner');
 
 async function vv2Command(sock, chatId, message) {
