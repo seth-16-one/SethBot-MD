@@ -11,7 +11,7 @@
 <img src="https://img.shields.io/badge/GITHUB-REPOSITORY-black?style=for-the-badge&logo=github">
 </a><br><br>
 
-<img src="https://img.shields.io/badge/Node.js-20+-green?style=for-the-badge&logo=node.js">
+<img src="https://img.shields.io/badge/Node.js-22+-green?style=for-the-badge&logo=node.js">
 <img src="https://img.shields.io/badge/Baileys-Latest-blue?style=for-the-badge">
 <img src="https://img.shields.io/badge/Platform-WhatsApp-25D366?style=for-the-badge&logo=whatsapp"></div>---
 
@@ -417,13 +417,15 @@ own `SESSION_DIR`.
 
 # 🔑 SESSION_ID deployment
 
-The bot can start from a **SESSION_ID** instead of a pairing code typed on the server. Pair on the pairing website (**Pair code** or **QR code**), copy the `SETHBOT~...` ID it shows (a copy also arrives in your own WhatsApp chat), then give it to the bot in one of two ways:
+The bot can start from a **SESSION_ID** instead of a pairing code typed on the server. Pair on the pairing website (**Pair code** or **QR code**), copy the `TELMAS~...` ID it shows (a copy also arrives in your own WhatsApp chat), then give it to the bot in one of three ways:
 
 ```bash
 # 1) environment variable
-SESSION_ID=SETHBOT~eyJ...
+SESSION_ID=TELMAS~eyJ...
 
 # 2) or a file named session.txt next to index.js containing only the ID
+
+# 3) or just start the bot and paste the ID into the console when it asks
 ```
 
 How it behaves:
@@ -431,7 +433,9 @@ How it behaves:
 - The ID is applied once; on restart the bot keeps the fresher credentials it has saved since.
 - A **new** SESSION_ID replaces the old credentials.
 - If WhatsApp logs the session out, the bot clears it and refuses that ID on the next restart (no crash loop). Generate a new ID.
-- With no SESSION_ID the bot works as before (existing session folder, QR or pairing code).
+- With no SESSION_ID and no saved session, the bot asks for it in the console (or reads session.txt). `ENABLE_QR=true` prints a QR for local testing.
+- Two hosts using the same SESSION_ID kick each other off (WhatsApp code 440); the bot stops instead of fighting.
+- Full host-by-host steps (Katabump, Docker, Heroku, Render, VPS): see [DEPLOY.md](DEPLOY.md).
 - `PAIR_SERVER_URL` (optional) points the `.pair` command at your pairing server. See `.env.example`.
 
 Keep the SESSION_ID private: it is a login for the WhatsApp account.
