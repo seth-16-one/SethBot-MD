@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
+const { downloadContentFromMessage } = require('baileys');
 const { TMP_DIR } = require('../lib/paths');
 
 async function ensureGroupAndAdmin(sock, chatId, senderId) {
