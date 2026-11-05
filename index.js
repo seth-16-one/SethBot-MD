@@ -23,9 +23,15 @@ const axios = require('axios')
 // customer's values.
 const { DATA_DIR, SESSION_DIR, STORE_FILE, CUSTOMER_ID } = require('./lib/paths')
 const { getPrimaryOwnerNumber } = require('./lib/owner')
-// SESSION_ID deployment: SESSION_ID env var or session.txt -> creds.json in SESSION_DIR (see lib/sessionLoader.js)
-const { acquireSession, markDead, readRawSessionId } = require('./lib/sessionLoader')
-const SESSION_FILE = path.join(process.cwd(), 'session.txt')
+// SESSION_ID deployment (same system as VORTE-PRO):
+//   SESSION_ID env var -> creds.json in SESSION_DIR (lib/sessionLoader.js)
+//   no/invalid SESSION_ID -> paste it in the console, or put it in session.txt (lib/sessionPrompt.js)
+const sessionLoader = require('./lib/sessionLoader')
+const { acquireSession } = require('./lib/sessionPrompt')
+const { startHealthServer, setStatus } = require('./lib/healthServer')
+const QR_ENABLED = process.env.ENABLE_QR === 'true'
+let reconnectAttempts = 0
+let reconnectTimer = null
 
 const { handleMessages, handleGroupParticipantUpdate, handleStatus } = require('./main');
 const PhoneNumber = require('awesome-phonenumber')
@@ -46,13 +52,12 @@ const {
     jidNormalizedUser,
     makeCacheableSignalKeyStore,
     delay
-} = require("@whiskeysockets/baileys")
+} = require("baileys")
 const NodeCache = require("node-cache")
 // Using a lightweight persisted store instead of makeInMemoryStore (compat across versions)
 const pino = require("pino")
 const readline = require("readline")
 const { parsePhoneNumber } = require("libphonenumber-js")
-const { PHONENUMBER_MCC } = require('@whiskeysockets/baileys/lib/Utils/generics')
 const { rmSync, existsSync } = require('fs')
 const { join } = require('path')
 
@@ -100,8 +105,9 @@ global.themeemoji = "•"
 const pairingCode = process.argv.includes("--pairing-code")
 const useMobile = process.argv.includes("--mobile")
 
-// Only create readline interface if we're in an interactive environment
-const rl = process.stdin.isTTY ? readline.createInterface({ input: process.stdin, output: process.stdout }) : null
+// Only create this readline interface for the optional --pairing-code flow in a real terminal.
+// (The SESSION_ID console prompt in lib/sessionPrompt.js reads stdin on its own; two readers would clash.)
+const rl = (pairingCode && process.stdin.isTTY) ? readline.createInterface({ input: process.stdin, output: process.stdout }) : null
 const question = (text) => {
     if (rl) {
         return new Promise((resolve) => rl.question(text, resolve))
@@ -114,24 +120,57 @@ const question = (text) => {
 }
 
 
+/** One reconnect at a time; a failed attempt schedules the next one (growing delay) instead of crashing. */
+function scheduleReconnect(delayMs) {
+    if (reconnectTimer) return // one is already pending
+    reconnectTimer = setTimeout(async () => {
+        reconnectTimer = null
+        try {
+            await startXeonBotInc()
+        } catch (e) {
+            console.error('❌ Reconnect failed:', e.message)
+            reconnectAttempts++
+            scheduleReconnect(Math.min(5000 * 2 ** reconnectAttempts, 60000))
+        }
+    }, delayMs + Math.random() * 1000)
+}
+
 async function startXeonBotInc() {
     try {
-        // Apply SESSION_ID / session.txt BEFORE Baileys reads the auth folder.
-        // With neither present nothing changes: existing folder, QR or pairing code work as before.
-        const sessionLoad = acquireSession(SESSION_DIR, process.env, { sessionFile: SESSION_FILE })
-        if (sessionLoad.status === 'invalid') {
-            console.log(chalk.red(`❌ SESSION_ID problem: ${sessionLoad.message}`))
-            console.log(chalk.yellow('Fix SESSION_ID (or session.txt) and restart. Waiting, not connecting.'))
-            return
-        }
-        if (sessionLoad.status === 'dead') {
-            console.log(chalk.red(`❌ ${sessionLoad.message}`))
-            return
-        }
+        // Local login flows (QR / --pairing-code) skip the SESSION_ID requirement.
+        const localLogin = QR_ENABLED || pairingCode
+        const hasSavedCreds = fs.existsSync(path.join(SESSION_DIR, 'creds.json'))
+
+        // Apply SESSION_ID BEFORE Baileys reads the auth folder. Uses SESSION_ID / saved credentials;
+        // otherwise asks for the ID in the console, or reads session.txt next to index.js.
+        const sessionLoad = await acquireSession(SESSION_DIR, process.env, {
+            allowPrompt: !localLogin && process.env.SESSION_PROMPT !== 'false',
+            hasSavedCreds
+        })
+
         if (sessionLoad.status === 'loaded') {
-            console.log(chalk.green(`🔑 Session loaded from SESSION_ID (${sessionLoad.phone})`))
+            console.log(chalk.green(`📦 SESSION_ID loaded for +${sessionLoad.phone}.`))
+        } else if (sessionLoad.status === 'unchanged') {
+            console.log(chalk.green(`📦 SESSION_ID unchanged (+${sessionLoad.phone}) — using saved credentials.`))
         }
 
+        // Nothing usable: stay idle (web server keeps running) instead of crash-looping against WhatsApp.
+        const stop = (lines) => {
+            console.error('\n' + lines.map((l) => '❌ ' + l).join('\n') + '\n')
+            setStatus('needs-session')
+        }
+        if (sessionLoad.status === 'invalid') return stop([`SESSION_ID problem: ${sessionLoad.message}`, 'Fix the SESSION_ID variable (or session.txt) and restart.'])
+        if (sessionLoad.status === 'dead') return stop([sessionLoad.message])
+        const nowHasCreds = fs.existsSync(path.join(SESSION_DIR, 'creds.json'))
+        if (sessionLoad.status === 'missing' && !nowHasCreds && !localLogin) {
+            return stop([
+                'No SESSION_ID was provided, so there is nothing to log in with.',
+                'Set the SESSION_ID variable, paste it into the console, or put it in a session.txt file next to index.js — then restart.',
+                '(For local testing only, ENABLE_QR=true prints a QR code instead.)'
+            ])
+        }
+
+        setStatus('connecting')
         let { version, isLatest } = await fetchLatestBaileysVersion()
         // SESSION_DIR is resolved per-customer from lib/paths.js (SESSION_DIR
         // env var). Reconnection reuses the same customer session; another
@@ -144,7 +183,6 @@ async function startXeonBotInc() {
         const XeonBotInc = makeWASocket({
             version,
             logger: pino({ level: 'silent' }),
-            printQRInTerminal: !pairingCode,
             browser: ["Ubuntu", "Chrome", "20.0.04"],
             auth: {
                 creds: state.creds,
@@ -286,7 +324,13 @@ async function startXeonBotInc() {
         const { connection, lastDisconnect, qr } = s
         
         if (qr) {
-            console.log(chalk.yellow('📱 QR Code generated. Please scan with WhatsApp.'))
+            if (QR_ENABLED) {
+                // Baileys 7 no longer prints the QR by itself: render it in the terminal (local testing only).
+                console.log(chalk.yellow('\n📷 Scan this QR with WhatsApp → Linked Devices → Link a Device:\n'))
+                require('qrcode-terminal').generate(qr, { small: true })
+            } else if (!pairingCode) {
+                console.error(chalk.red('❌ WhatsApp is asking for a new login (QR) — the saved session is not valid. Generate a new SESSION_ID. (Set ENABLE_QR=true to print QR codes.)'))
+            }
         }
         
         if (connection === 'connecting') {
@@ -294,6 +338,8 @@ async function startXeonBotInc() {
         }
         
         if (connection == "open") {
+            reconnectAttempts = 0
+            setStatus('online', String(XeonBotInc.user?.id || '').split(':')[0])
             console.log(chalk.magenta(` `))
             console.log(chalk.yellow(`🌿Connected to => ` + JSON.stringify(XeonBotInc.user, null, 2)))
 
@@ -318,28 +364,36 @@ async function startXeonBotInc() {
         }
         
         if (connection === 'close') {
-            const shouldReconnect = (lastDisconnect?.error)?.output?.statusCode !== DisconnectReason.loggedOut
             const statusCode = lastDisconnect?.error?.output?.statusCode
-            
-            console.log(chalk.red(`Connection closed due to ${lastDisconnect?.error}, reconnecting ${shouldReconnect}`))
-            
-            if (statusCode === DisconnectReason.loggedOut || statusCode === 401) {
-                try {
-                    // Clears the credentials and remembers a SESSION_ID in use as dead, so a restart
-                    // does not retry it in a loop. A new SESSION_ID is needed.
-                    markDead(sessionDir, readRawSessionId(process.env, SESSION_FILE))
-                    console.log(chalk.yellow('Session credentials cleared. Please re-authenticate (new SESSION_ID or pairing).'))
-                } catch (error) {
-                    console.error('Error deleting session:', error)
-                }
-                console.log(chalk.red('Session logged out. Please re-authenticate.'))
+            console.log(chalk.red(`🔌 Connection closed (Code: ${statusCode}): ${lastDisconnect?.error}`))
+
+            // Cases where reconnecting is pointless or harmful:
+            if (statusCode === DisconnectReason.loggedOut || statusCode === 401 || statusCode === 403) {
+                // Clears the credentials and remembers the SESSION_ID in use as dead, so a restart
+                // does not retry it in a loop. A new SESSION_ID is needed.
+                sessionLoader.markDead(sessionDir, process.env.SESSION_ID)
+                setStatus('logged-out')
+                console.error(chalk.red('❌ WhatsApp logged this session out (or banned it). Generate a NEW SESSION_ID, set it, and restart. Not reconnecting.'))
+                return
             }
-            
-            if (shouldReconnect) {
-                console.log(chalk.yellow('Reconnecting...'))
-                await delay(5000)
-                startXeonBotInc()
+            if (statusCode === DisconnectReason.connectionReplaced) { // 440
+                setStatus('replaced')
+                console.error(chalk.red('❌ This session was opened somewhere else (same SESSION_ID running on another host/instance). Stop the other one — not reconnecting, to avoid a fight.'))
+                return
             }
+            if (statusCode === DisconnectReason.badSession) { // 500: corrupted local state -> rebuild from SESSION_ID
+                console.error(chalk.yellow('⚠️ Local session state was corrupted — rebuilding from SESSION_ID.'))
+                sessionLoader.forgetLoaded(sessionDir)
+            }
+
+            // Everything else (incl. 515 restart-after-pairing): reconnect with a growing delay.
+            setStatus('reconnecting')
+            const wait = statusCode === DisconnectReason.restartRequired ? 1000 : Math.min(5000 * 2 ** reconnectAttempts, 60000)
+            reconnectAttempts++
+            console.log(chalk.yellow(`🔄 Reconnecting in ${Math.round(wait / 1000)}s...`))
+            // retire the dead socket so its listeners can never fire again, then reconnect exactly once
+            try { XeonBotInc.ev.removeAllListeners(); XeonBotInc.end(undefined) } catch { /* already closed */ }
+            scheduleReconnect(wait)
         }
     })
 
@@ -403,11 +457,14 @@ async function startXeonBotInc() {
     return XeonBotInc
     } catch (error) {
         console.error('Error in startXeonBotInc:', error)
-        await delay(5000)
-        startXeonBotInc()
+        reconnectAttempts++
+        scheduleReconnect(Math.min(5000 * 2 ** reconnectAttempts, 60000))
     }
 }
 
+
+// Web server for hosts that need an open port (Heroku/Render/Docker panels) and uptime pings
+startHealthServer(settings.botName || 'SethBot-MD')
 
 // Start the bot with error handling
 startXeonBotInc().catch(error => {
