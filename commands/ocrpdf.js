@@ -1,7 +1,7 @@
 const pdf = require('pdf-parse');
 const fs = require('fs');
 const path = require('path');
-const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
+const { downloadContentFromMessage } = require('baileys');
 
 async function ocrpdfCommand(sock, chatId, message) {
     try {
