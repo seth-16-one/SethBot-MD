@@ -70,12 +70,15 @@ setInterval(() => {
     }
 }, 60_000) // every 1 minute
 
-// Memory monitoring - Restart if RAM gets too high
+// Memory monitoring - Restart if RSS exceeds the per-process limit.
+// Threshold is 700 MB (raised from 400 MB to avoid unnecessary PM2 restarts
+// during normal multi-customer operation). PM2 should also be configured with
+// an 800 MB max_memory_restart safety net (see README / PM2 section).
 setInterval(() => {
     const used = process.memoryUsage().rss / 1024 / 1024
-    if (used > 400) {
-        console.log('⚠️ RAM too high (>400MB), restarting bot...')
-        process.exit(1) // Panel will auto-restart
+    if (used > 700) {
+        console.log(`⚠️ RSS too high: ${used.toFixed(1)} MB (limit 700 MB), restarting bot...`)
+        process.exit(1) // PM2 auto-restarts the process
     }
 }, 30_000) // check every 30 seconds
 

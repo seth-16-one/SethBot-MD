@@ -32,7 +32,10 @@ function customer(name, ownerNumber) {
             OWNER_NUMBER: ownerNumber,
         },
         autorestart: true,
-        max_memory_restart: '512M',
+        // PM2 safety net: restart before the OS OOM-killer. Sits above the
+        // 700 MB in-app watchdog in index.js so the app's own watchdog fires
+        // first (with a clear log line) and PM2 only acts if the app misses it.
+        max_memory_restart: '800M',
         exp_backoff_restart_delay: 5000,
     };
 }
