@@ -1,4 +1,4 @@
-const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
+const { downloadContentFromMessage } = require('baileys');
 
 async function viewonceCommand(sock, chatId, message) {
     // Extract quoted imageMessage or videoMessage from your structure
