@@ -3,7 +3,7 @@ const fs = require('fs');
 const fsPromises = require('fs/promises');
 const fse = require('fs-extra');
 const path = require('path');
-const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
+const { downloadContentFromMessage } = require('baileys');
 const { TEMP_DIR } = require('../lib/paths');
 
 const tempDir = TEMP_DIR;
