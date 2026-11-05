@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
+const { downloadContentFromMessage } = require('baileys');
 const isOwnerOrSudo = require('../lib/isOwner');
 const { TMP_DIR } = require('../lib/paths');
 
