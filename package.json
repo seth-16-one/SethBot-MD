@@ -1,23 +1,21 @@
 {
   "name": "sethbot",
   "version": "1.0.0",
-  "description": "WhatsApp Bot",
+  "description": "WhatsApp Bot (SethBot-MD)",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "start:optimized": "node --max-old-space-size=512 --optimize-for-size --gc-interval=100 index.js",
-    "cleanup": "node cleanup.js",
-    "reset-session": "node reset-session.js",
-    "start:clean": "npm run cleanup && npm run start:optimized",
-    "start:fresh": "npm run reset-session && npm start",
     "install:panel": "npm install --legacy-peer-deps",
     "install:force": "npm install --force",
-    "test": "node test/multi-customer-isolation.test.js && node test/load-integrity.test.js && node test/import-resolution.test.js && node test/startup.test.js",
+    "test": "node test/multi-customer-isolation.test.js && node test/load-integrity.test.js && node test/import-resolution.test.js && node test/startup.test.js && node test/session.test.js",
     "test:isolation": "node test/multi-customer-isolation.test.js",
     "test:load": "node test/load-integrity.test.js",
     "test:imports": "node test/import-resolution.test.js",
     "test:startup": "node test/startup.test.js",
-    "docker:build": "docker build -t docker run -e SESSION_ID=$SESSION_ID sethbot"
+    "docker:build": "docker build -t sethbot .",
+    "test:session": "node test/session.test.js",
+    "dev": "node --watch index.js"
   },
   "keywords": [
     "whatsapp-bot"
@@ -30,9 +28,9 @@
     "@ffmpeg/ffmpeg": "^0.12.15",
     "@hapi/boom": "^10.0.1",
     "@types/node": "^18.0.6",
-    "@whiskeysockets/baileys": "^v7.0.0-rc.9",
     "awesome-phonenumber": "^5.9.0",
-    "axios": "^1.8.4",
+    "axios": "^1.12.2",
+    "baileys": "7.0.0-rc14",
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0-rc.12",
     "cookie": "^0.5.0",
@@ -45,16 +43,15 @@
     "gtts": "^0.2.1",
     "human-readable": "^0.2.1",
     "jimp": "^1.6.0",
-    "jsdom": "^22.1.0",
+    "jsdom": "^26.1.0",
     "libphonenumber-js": "^1.11.18",
-    "libsignal": "^2.0.1",
     "link-preview-js": "^3.0.5",
     "moment-timezone": "^0.5.43",
     "mumaker": "^2.0.0",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.7.0",
     "node-id3": "^0.2.3",
-    "node-webpmux": "^3.1.0",
+    "node-webpmux": "^3.2.1",
     "node-youtube-music": "^0.8.3",
     "pdf-parse": "^1.1.1",
     "performance-now": "^2.1.0",
@@ -67,7 +64,7 @@
     "ruhend-scraper": "^8.3.0",
     "safe-stable-stringify": "^2.5.0",
     "set-cookie": "^0.0.4",
-    "sharp": "^0.32.6",
+    "sharp": "^0.34.3",
     "tesseract.js": "^7.0.0",
     "tough-cookie": "^5.0.0",
     "translate-google": "^1.5.0",
@@ -82,9 +79,10 @@
     "ytdl-core": "^4.11.5"
   },
   "overrides": {
-    "jimp": "^1.6.0"
+    "jimp": "^1.6.0",
+    "axios": "$axios"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22"
   }
 }
